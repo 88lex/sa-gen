@@ -6,6 +6,9 @@
 # run gcloud init --console-only first and select a project
 # Create a folder for your keys before running the script
 KEYS_DIR=/opt/sa-gen/keys
+#
+# If you want to create more than 100 jsons then increment COUNT for each batch.
+# For the first batch COUNT=1. Second batch COUNT=101. Third batch COUNT=201 ...
 COUNT=1
 for name in sagen{1..100}; do
   echo creating service account for $name
