@@ -8,8 +8,8 @@ _forked from mc2squared at https://gist.github.com/mc2squared/01c933a8172a26af88
 
 
 **requires gcloud command line tools**
-install with curl https://sdk.cloud.google.com | bash
-or go to https://cloud.google.com/sdk/docs/quickstarts to read more and install in non-linux OSes.
+install with ```curl https://sdk.cloud.google.com | bash```
+or go to ```https://cloud.google.com/sdk/docs/quickstarts``` to read more and install in non-linux OSes.
 
 max 100 service accounts per project
 
