@@ -17,7 +17,8 @@ max 12 projects for a normal gmail account.
 max 50 projects for a paid gsuite account. You can request more project from Google if necessary.
 
 run `gcloud init --console-only` first and select a project for your first batch of 100.
-For subsequent batches of 100 you run `gcloud init` again, pick 1, then 2 to select then next project.
+For subsequent batches of 100 you run `gcloud init` again, pick 1, [1] Re-initialize this configuration
+then choose the account where your projects/SAs reside. Then choose the next project.
 
 Before running the script: 
 Create a folder for your keys before running the script
