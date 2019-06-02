@@ -22,7 +22,7 @@ For subsequent batches of 100 you rclone gcloud init again, pick 1, then 2 to se
 Before running the script: 
 Create a folder for your keys before running the script
 
-Set your key directory, default is KEYS_DIR=/opt/sa. There is no need to change your KEYS_DIR as you 
+Set your key directory, default is `KEYS_DIR=/opt/sa`. There is no need to change your KEYS_DIR as you 
 run more batches and projects, as long as you increment the key numbers appropriately to not overwrite existing keys.
 
 If you want to create more than 100 jsons then increment COUNT for each batch.
