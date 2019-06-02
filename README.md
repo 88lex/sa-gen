@@ -16,7 +16,7 @@ max 100 service accounts per project
 max 12 projects for a normal gmail account. 
 max 50 projects for a paid gsuite account. You can request more project from Google if necessary.
 
-run gcloud init --console-only first and select a project for your first batch of 100.
+run `gcloud init --console-only` first and select a project for your first batch of 100.
 For subsequent batches of 100 you rclone gcloud init again, pick 1, then 2 to select then next project.
 
 Before running the script: 
@@ -28,6 +28,6 @@ run more batches and projects, as long as you increment the key numbers appropri
 If you want to create more than 100 jsons then increment COUNT for each batch.
 For the first batch set COUNT=1 and sagen{1..100} in the script. 
 
-For more batches set COUNT=101 and sagen{101..200}. Third batch COUNT=201 sagen{201..300) and so on...
+For more batches edit and change `COUNT=101` and `sagen{101..200}` in the script. Third batch `COUNT=201` `sagen{201..300}` and so on...
 
 
