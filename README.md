@@ -31,4 +31,37 @@ For the first batch set COUNT=1 and sagen{1..100} in the script.
 
 For more batches edit and change `COUNT=101` and `sagen{101..200}` in the script. Third batch `COUNT=201` `sagen{201..300}` and so on...
 
+FURTHER NOTES TO THE ABOVE:
 
+In the first pass use the following:
+
+```
+KEYS_DIR=/opt/sa
+#
+# If you want to create more than 100 jsons then increment COUNT for each batch.
+# For the first batch COUNT=1. Second batch COUNT=101. Third batch COUNT=201 ...
+COUNT=1
+for name in sagen{1..101}; do
+```
+
+Then in the second pass do the following
+
+```
+KEYS_DIR=/opt/sa
+#
+# If you want to create more than 100 jsons then increment COUNT for each batch.
+# For the first batch COUNT=1. Second batch COUNT=101. Third batch COUNT=201 ...
+COUNT=101
+for name in sagen{101..201}; do
+```
+
+Then for the third pass do the following:
+
+```
+KEYS_DIR=/opt/sa
+#
+# If you want to create more than 100 jsons then increment COUNT for each batch.
+# For the first batch COUNT=1. Second batch COUNT=101. Third batch COUNT=201 ...
+COUNT=201
+for name in sagen{201..301}; do
+```
