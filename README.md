@@ -27,7 +27,8 @@ Set your key directory, default is `KEYS_DIR=/opt/sa`. There is no need to chang
 run more batches and projects, as long as you increment the key numbers appropriately to not overwrite existing keys.
 
 If you want to create more than 100 jsons then increment COUNT for each batch.
-For the first batch set COUNT=1 and sagen{1..100} in the script. 
+For the first batch set `COUNT=1` and `sagen{1..100}` in the script. 
+( Note that `sagen` is simply a text prefix for the name that the SA email will be given. You may choose whatever prefix you like.)
 
 For more batches edit and change `COUNT=101` and `sagen{101..200}` in the script. Third batch `COUNT=201` `sagen{201..300}` and so on...
 
