@@ -2,7 +2,8 @@
 
 This script uses gcloud sdk to create multiple projects and up to 100 service accounts per project.
 It also downloads a json file for each service account that is created.
-The script also creaates a csv file that can be used to bulk upload service account emails to a google group, 
+
+The script also creates a csv file that can be used to bulk upload service account emails to a google group, 
 which can then be added to your Team Drives and/or My Drive folders. This allows you to use service accounts with rclone sync/co
 
 
@@ -61,7 +62,8 @@ _forked from DashLt at https://gist.github.com/DashLt/4c6ff6e9bde4e9bc4a9ed7066c
 _forked from mc2squared at https://gist.github.com/mc2squared/01c933a8172a26af88285610a0e5af8d_
 
 
-**requires gcloud command line tools**
+requires gcloud command line tools
+
 install with ```curl https://sdk.cloud.google.com | bash```
 or go to ```https://cloud.google.com/sdk/docs/quickstarts``` to read more and install in non-linux OSes.
 
@@ -75,7 +77,7 @@ For subsequent batches of 100 you run `gcloud init` again, pick 1, [1] Re-initia
 then choose the account where your projects/SAs reside. Then choose the next project.
 
 Before running the script: 
-Create a folder for your keys before running the script
+Create a folder for your keys
 
 Set your key directory, default is `KEYS_DIR=/opt/sa`. There is no need to change your KEYS_DIR as you 
 run more batches and projects, as long as you increment the key numbers appropriately to not overwrite existing keys.
