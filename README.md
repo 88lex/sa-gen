@@ -19,8 +19,9 @@ directory as long as the json file names do not overlap.
 
 **export ORGANIZATION_ID=123456789012**
 This is your ORGANIZATION_ID. It is the numeric ID, rather than your account/domain name
-To find it go to https://console.cloud.google.com/iam-admin/settings. Under Organization name you will see Organizationn ID
-Alternatively you can choose your organization when installing `gcloud init` after installing the sdk and manually choose your organization.
+To find it go to https://console.cloud.google.com/iam-admin/settings. Under Organization name you will see the numeric `OrganizationID`. 
+Alternatively you can choose your organization by manually running `gcloud init` after installing the sdk. If you do this then you
+can leave it blank `ORGANIZATION_ID=""`
 
 **export GROUP_NAME=mygroup@mydomain.com**
 This is the name of the group that you will share your team drives or my drive folders with.
@@ -49,6 +50,9 @@ If this is your first batch then set FIRST_SA=1. Otherwise set it to your highes
 
 **export NUM_SAS_PER_PROJECT=100**
 NUM_SAS_PER_PROJECT is the number of service accounts/SAs that you want to create for each project
+
+If you have set all of these correctly they you can run `./sa-gen` and it will cycle through creation of your projects and service accounts. 
+The json files will be in the directory you specified, along with a file called `members.csv` which you can bulk upload to your group.
 
 *************************
 *************************
