@@ -1,4 +1,10 @@
-# sa-gen
+# sa-genpy.
+
+This script uses gcloud sdk to create multiple projects and up to 100 service accounts per project.
+It also downloads a json file for each service account that is created.
+The script also creaates a csv file that can be used to bulk upload service account emails to a google group, 
+which can then be added to your Team Drives and/or My Drive folders. This allows you to use service accounts with rclone sync/co
+
 
 # NOTES:
 # Forked from DashLt at https://gist.github.com/DashLt/4c6ff6e9bde4e9bc4a9ed7066c4efba4 and
