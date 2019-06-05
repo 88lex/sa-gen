@@ -54,6 +54,11 @@ NUM_SAS_PER_PROJECT is the number of service accounts/SAs that you want to creat
 If you have set all of these correctly they you can run `./sa-gen` and it will cycle through creation of your projects and service accounts. 
 The json files will be in the directory you specified, along with a file called `members.csv` which you can bulk upload to your group.
 
+** See https://github.com/88lex/sa-guide for further information. Note that sa-guide may not be completely updated, but should provide some help.**
+
+
+
+
 *************************
 *************************
 
