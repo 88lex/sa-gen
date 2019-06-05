@@ -1,5 +1,53 @@
 # sa-gen
 
+# NOTES:
+# Forked from DashLt at https://gist.github.com/DashLt/4c6ff6e9bde4e9bc4a9ed7066c4efba4 and
+# Forked from mc2squared at https://gist.github.com/mc2squared/01c933a8172a26af88285610a0e5af8d
+# Borrowed some great ideas from JD at https://gist.github.com/zen-jd/cc6c609b9389443bd7eeac3be8c74710
+#
+# export KEYS_DIR=/opt/sa
+# This is the location where you want to store your service account json keys. Please create it before running this script
+# Note that you can create a maximum of 100 service accounts per project, but you can store all of your json keys in this
+# directory as long as the json file names do not overlap.
+#
+# export ORGANIZATION_ID=123456789012
+# This is your ORGANIZATION_ID. It is the numeric ID, rather than your account/domain name
+# To find it go to https://console.cloud.google.com/iam-admin/settings. Under Organization name you will see Organizationn ID
+# Alternatively you can choose your organization when installing `gcloud init` after installing the sdk and manually choose your organization.
+#
+# export GROUP_NAME=mygroup@mydomain.com
+# This is the name of the group that you will share your team drives or my drive folders with.
+# Normally this will be in the format "some_group_name@googlegroups.com" or "mygroup@mydomain.com"
+#
+# export PROJECT_BASE_NAME=sasync
+# This is the base name for a project created with this script. It will be appended with the number of each project
+# as they are created. For example, a base of 'sacopy' will create projects called `sacopy1`, `sacopy2` and so on.
+#
+# export FIRST_PROJECT_NUM=1
+# export LAST_PROJECT_NUM=12
+# These are the starting and ending numbers for the project name. As noted above, a base name of 'sacopy` and first number of `1` will
+# create projects `sacopy1`, `sacopy2` until the LAST_PROJECT_NUM
+# Note that paid gsuite accounts can create a max of 50 accounts, but can apply for more. Free accounts can create up to 12 projects
+#
+# export SA_EMAIL_BASE_NAME=sagen
+# This is the base name for each service account email created with this script. It will be appended with the number of each service account
+# as they are created. For example, a base of 'sagen' will create service accounts with email addresses
+# in the format sagen1@sacopy1.iam.gserviceaccount.com , incrementing up to sagen100@sacopy1.iam.gserviceaccount.com. If you have more
+# than one project then the script will increment SA numbers and project numbers, e.g. sagen101@sacopy2.iam.gserviceaccount.com and so on.
+#
+# export FIRST_SA_NUM=1
+# FIRST_SA_NUM will be the number of the first service account and json file for this batch that you are creating.
+# If this is your first batch then set FIRST_SA=1. Otherwise set it to your highest SA number+1
+#
+# export NUM_SAS_PER_PROJECT=100
+# NUM_SAS_PER_PROJECT is the number of service accounts/SAs that you want to create for each project
+
+
+*************************
+*************************
+
+THIS IS THE README.MD FOR THE OLD sa-gen-original THAT IS STILL AVAILABLE IN THE REPO
+
 Create up to 100 service accounts for a google project using gcloud SDK
 
 _forked from DashLt at https://gist.github.com/DashLt/4c6ff6e9bde4e9bc4a9ed7066c4efba4_ and
