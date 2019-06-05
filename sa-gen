@@ -18,16 +18,16 @@ create_project() {
       gcloud projects create $PROJECT --organization=$ORGANIZATION_ID
       gcloud config set project $PROJECT
       gcloud services enable drive.googleapis.com
-      sleep 1s
+      sleep 10s
 }
 
 create_sas() {
-    let LAST_SA_NUM=$FIRST_SA_NUM+$NUM_SAS_PER_PROJECT-1
+    let LAST_SA_NUM=$FIRST_SA_NUM+$NUM_SAS_PER_PROJECT
     for name in $(seq $FIRST_SA_NUM $LAST_SA_NUM); do
       echo creating service account for $SA_EMAIL_BASE_NAME$name
       gcloud iam service-accounts create $SA_EMAIL_BASE_NAME$name
       echo "$GROUP_NAME,$SA_EMAIL_BASE_NAME$name@$PROJECT.iam.gserviceaccount.com,USER,MEMBER" >>$KEYS_DIR/members.csv
-    sleep 1s
+    #sleep 1s
     done
     let COUNT=$FIRST_SA_NUM
     for name in $(gcloud iam service-accounts list --format='value(email)'); do
