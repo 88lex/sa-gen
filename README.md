@@ -22,10 +22,10 @@ Note that you can create a maximum of 100 service accounts per project, but you 
 directory as long as the json file names do not overlap.
 
 **export ORGANIZATION_ID=123456789012**
-This is your ORGANIZATION_ID. It is the numeric ID, rather than your account/domain name
-To find it go to https://console.cloud.google.com/iam-admin/settings. Under Organization name you will see the numeric `OrganizationID`. 
+This needs to be replace with your own ORGANIZATION_ID. It is the numeric ID, rather than your account/domain name.
+To find your own ORGANIZATION ID go to https://console.cloud.google.com/iam-admin/settings. Under Organization name you will see the numeric `OrganizationID`. 
 Alternatively you can choose your organization by manually running `gcloud init` after installing the sdk. If you do this then you
-can leave it blank `ORGANIZATION_ID=""`
+can leave it blank ==> `ORGANIZATION_ID=""`
 
 **export GROUP_NAME=mygroup@mydomain.com**
 This is the name of the group that you will share your team drives or my drive folders with.
