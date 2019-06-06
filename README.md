@@ -10,7 +10,7 @@ The script creates a csv file in the `KEYS_DIR` directory that can be used to bu
 which can then be added to your Team Drives and/or My Drive folders. This allows you to use service accounts with rclone sync/copy
 
 If you have already installed `gcloud sdk` please be sure you have initialized the account for which you wish to create projects ans service accounts.
-If you have not installed `gcloud sdk` please go to `https://cloud.google.com/sdk/docs/quickstarts` and follow instructions to install for your OS,
+If you have not installed `gcloud sdk` please go to https://cloud.google.com/sdk/docs/quickstarts and follow instructions to install for your OS,
 Once you have installed gcloud sdk be sure to run `gcloud init` and authorize (auth) to the account for which you want to create service accounts.
 
 There are a number of variables that you need to specify to run sa-gen for your own account, and to create service accounts and jsons 
@@ -23,11 +23,13 @@ Note that you can create a maximum of 100 service accounts per project, but you 
 directory as long as the json file names do not overlap.
 
 **export ORGANIZATION_ID=""**
-This can be left blank ( "" ) if you have already initialized the organization in gcloud sdk with `gcloud init`.
+This can be left blank ( "" ) if you have already initialized the organization in gcloud sdk with `gcloud init`. 
+
 However if you want to be certain then you can manually replace it with your own ORGANIZATION_ID. It is a numeric ID, rather than your account/domain name.
 The easiest way find your own ORGANIZATION ID is to use the console where you have installed `gcloud sdk` and type the command `gcloud organizations list`.
 This will show you your DISPLAY_NAME, ID, and DIRECTORY_CUSTOMER_ID. The 12 digit number in the middle is your ORGANIZATION_ID. Insert that
 number in the script.
+
 If for some reason you cannot find the ORGANIZATION_ID using the gcloud sdk you can also go to https://console.cloud.google.com/iam-admin/settings. 
 On that screen go to the top. Choose `Select Project`, then in the popup choose `Select From` and choose your account/domain name. You should see
 a column titled ID. The 12 digit number next to your account/domain name is the ORGANIZATION_ID.
@@ -62,7 +64,14 @@ NUM_SAS_PER_PROJECT is the number of service accounts/SAs that you want to creat
 If you have set all of these correctly they you can run `./sa-gen` and it will cycle through creation of your projects and service accounts. 
 The json files will be in the directory you specified, along with a file called `members.csv` which you can bulk upload to your group.
 
-** See https://github.com/88lex/sa-guide for further information. Note that sa-guide may not be completely updated, but should provide some help.**
+**Once you have set the above variables go the command line and run `./sa-gen` . The script will create the projects and service accounts for you.**
+
+
+
+
+**For further information pleasee see https://github.com/88lex/sa-guide for further information. Note that sa-guide may not be completely updated, but should provide some help.**
+
+
 
 *****************
 *****************
@@ -72,10 +81,13 @@ Forked from DashLt at https://gist.github.com/DashLt/4c6ff6e9bde4e9bc4a9ed7066c4
 Forked from mc2squared at https://gist.github.com/mc2squared/01c933a8172a26af88285610a0e5af8d
 Borrowed some great ideas from JD at https://gist.github.com/zen-jd/cc6c609b9389443bd7eeac3be8c74710
 
+
+
+
 *************************
 *************************
 
-THE TEXT BELOW CONTAINS THE README.MD FOR THE OLD/PRIOR VERSION sa-gen-original THAT IS STILL AVAILABLE IN THE REPO
+**THE TEXT BELOW CONTAINS THE README.MD FOR THE OLD/PRIOR VERSION sa-gen-original THAT IS STILL AVAILABLE IN THE REPO**
 
 *************************
 *************************
