@@ -4,8 +4,10 @@ This script uses gcloud sdk to create multiple projects and up to 100 service ac
 It also downloads a json file for each service account that is created.
 
 The script also creates a csv file that can be used to bulk upload service account emails to a google group, 
-which can then be added to your Team Drives and/or My Drive folders. This allows you to use service accounts with rclone sync/co
+which can then be added to your Team Drives and/or My Drive folders. This allows you to use service accounts with rclone sync/copy
 
+gcloud sdk can be installed with ```curl https://sdk.cloud.google.com | bash```
+or you can go to ```https://cloud.google.com/sdk/docs/quickstarts``` to read more and install in non-linux OSes.
 
 **NOTES:**
 Forked from DashLt at https://gist.github.com/DashLt/4c6ff6e9bde4e9bc4a9ed7066c4efba4 and
@@ -56,13 +58,17 @@ The json files will be in the directory you specified, along with a file called 
 
 ** See https://github.com/88lex/sa-guide for further information. Note that sa-guide may not be completely updated, but should provide some help.**
 
-
+*****************
+*****************
 
 
 *************************
 *************************
 
-THIS IS THE README.MD FOR THE OLD sa-gen-original THAT IS STILL AVAILABLE IN THE REPO
+THE TEXT BELOW CONTAINS THE README.MD FOR THE OLD/PRIOR VERSION sa-gen-original THAT IS STILL AVAILABLE IN THE REPO
+
+*************************
+*************************
 
 Create up to 100 service accounts for a google project using gcloud SDK
 
