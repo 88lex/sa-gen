@@ -27,14 +27,14 @@ create_sas() {
       echo creating service account for $SA_EMAIL_BASE_NAME$name
       gcloud iam service-accounts create $SA_EMAIL_BASE_NAME$name
       gcloud iam service-accounts keys create $KEYS_DIR/$name.json --iam-account=$SA_EMAIL_BASE_NAME$name@$PROJECT.iam.gserviceaccount.com      
-      echo "$GROUP_NAME,$SA_EMAIL_BASE_NAME$name@$PROJECT.iam.gserviceaccount.com,USER,MEMBER" >>$KEYS_DIR/members.csv
+      echo "$GROUP_NAME,$SA_EMAIL_BASE_NAME$name@$PROJECT.iam.gserviceaccount.com,USER,MEMBER" | tee -a $KEYS_DIR/members.csv $KEYS_DIR/allmembers.csv
     #sleep 1s
     done
     let FIRST_SA_NUM=$FIRST_SA_NUM+100
 }
 
 main() {
-    echo $KEYS_DIR/members.csv >> $KEYS_DIR/allmembers.csv; echo $KEYS_DIR/allmembers.csv | sort >> $KEYS_DIR/allmembers.csv
+    cat $KEYS_DIR/members.csv >> $KEYS_DIR/allmembers.csv; sort -uo $KEYS_DIR/allmembers.csv $KEYS_DIR/allmembers.csv
     echo "Group Email [Required],Member Email,Member Type,Member Role" >$KEYS_DIR/members.csv
     for project_num in $(seq $FIRST_PROJECT_NUM $LAST_PROJECT_NUM); do
         create_project $PROJECT_BASE_NAME$project_num
