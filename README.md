@@ -11,6 +11,8 @@ which can then be added to your Team Drives and/or My Drive folders. This allows
 
 gcloud sdk can be installed with ```curl https://sdk.cloud.google.com | bash```
 or you can go to ```https://cloud.google.com/sdk/docs/quickstarts``` to read more and install in non-linux OSes.
+Once you have installed gcloud sdk then you need to run `gcloud init` and authorize (auth) to the account for which 
+you want to create service accounts.
 
 There are a number of variables that you need to specify to run sa-gen for your own account, and to create service accounts and jsons 
 that are names the way you want to name them. These variables are described below. The names and numeric ranges are quite flexible - 
