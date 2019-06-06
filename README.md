@@ -17,12 +17,12 @@ There are a number of variables that you need to specify to run sa-gen for your 
 that are names the way you want to name them. These variables are described below. The names and numeric ranges are quite flexible - 
 name them as you like.
 
-**export KEYS_DIR=/opt/sa**
+**export KEYS_DIR=/opt/sa**    
 This is the location where you want to store your service account json keys. Please create it before running this script
 Note that you can create a maximum of 100 service accounts per project, but you can store all of your json keys in this
 directory as long as the json file names do not overlap.
 
-**export ORGANIZATION_ID=""**
+**export ORGANIZATION_ID=""**    
 This can be left blank ( "" ) if you have already initialized the organization in gcloud sdk with `gcloud init`. 
 
 However if you want to be certain then you can manually replace it with your own ORGANIZATION_ID. It is a numeric ID, rather than your account/domain name.
@@ -34,17 +34,17 @@ If for some reason you cannot find the ORGANIZATION_ID using the gcloud sdk you 
 On that screen go to the top. Choose `Select Project`, then in the popup choose `Select From` and choose your account/domain name. You should see
 a column titled ID. The 12 digit number next to your account/domain name is the ORGANIZATION_ID.
 
-**export GROUP_NAME=mygroup@mydomain.com**
+**export GROUP_NAME=mygroup@mydomain.com**    
 This is the name of the group that you will share your team drives or my drive folders with.
 Normally this will be in the format "some_group_name@googlegroups.com" or "mygroup@mydomain.com"
 
-**export PROJECT_BASE_NAME=sasync**
+**export PROJECT_BASE_NAME=sasync**    
 This is the base name for a project created with this script. It will be appended with the number of each project
 as they are created. For example, a base of 'sacopy' will create projects called `sacopy1`, `sacopy2` and so on. 
 You can choose any base name that you like, rather than `sacopy`.
 
 **export FIRST_PROJECT_NUM=1**    
-**export LAST_PROJECT_NUM=2**
+**export LAST_PROJECT_NUM=2**    
 These are the starting and ending numbers that are appended to the project name. As noted above, a base name of 'sacopy` and first number of `1` will
 create projects `sacopy1`, `sacopy2` until the LAST_PROJECT_NUM .
 
@@ -55,17 +55,17 @@ If you have already created projects then it is a good idea to start with the ne
 created 500 jsons in projects sacopy1 through sacopy5 and you want to create 5 more projects then you would set FIRST_PROJECT_NUM=6 and
 LAST_PROJECT_NUM=10.
 
-**export SA_EMAIL_BASE_NAME=sagen**
+**export SA_EMAIL_BASE_NAME=sagen**    
 This is the base name for each service account email created with this script. It will be appended with the number of each service account
 as they are created. For example, a base of 'sagen' will create service accounts with email addresses
 in the format sagen1@sacopy1.iam.gserviceaccount.com , incrementing up to sagen100@sacopy1.iam.gserviceaccount.com. If you have more
 than one project then the script will increment SA numbers and project numbers, e.g. sagen101@sacopy2.iam.gserviceaccount.com and so on.
 
-**export FIRST_SA_NUM=1**
+**export FIRST_SA_NUM=1**    
 FIRST_SA_NUM will be the number of the first service account and json file for this batch that you are creating.
 If this is your first batch then set FIRST_SA=1. Otherwise set it to your highest SA number+1
 
-**export NUM_SAS_PER_PROJECT=100**
+**export NUM_SAS_PER_PROJECT=100**    
 NUM_SAS_PER_PROJECT is the number of service accounts/SAs that you want to create for each project
 
 If you have set all of these correctly they you can run `./sa-gen` and it will cycle through creation of your projects and service accounts. 
