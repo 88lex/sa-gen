@@ -26,14 +26,9 @@ create_sas() {
     for name in $(seq $FIRST_SA_NUM $LAST_SA_NUM); do
       echo creating service account for $SA_EMAIL_BASE_NAME$name
       gcloud iam service-accounts create $SA_EMAIL_BASE_NAME$name
+      gcloud iam service-accounts keys create $KEYS_DIR/$name.json --iam-account=$SA_EMAIL_BASE_NAME$name@$PROJECT.iam.gserviceaccount.com      
       echo "$GROUP_NAME,$SA_EMAIL_BASE_NAME$name@$PROJECT.iam.gserviceaccount.com,USER,MEMBER" >>$KEYS_DIR/members.csv
     #sleep 1s
-    done
-    let COUNT=$FIRST_SA_NUM
-    for name in $(gcloud iam service-accounts list --format='value(email)'); do
-      echo Creating $COUNT.json for service account $name
-      gcloud iam service-accounts keys create $KEYS_DIR/$COUNT.json --iam-account=$name
-      let COUNT+=1
     done
     let FIRST_SA_NUM=$FIRST_SA_NUM+100
 }
