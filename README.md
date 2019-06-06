@@ -1,5 +1,7 @@
 **sa-gen**
 
+Usage:  `./sa-gen` will run the script using the variables that you insert/edit below.
+
 This script uses gcloud sdk to create multiple projects and up to 100 service accounts per project.
 It also downloads a json file for each service account that is created.
 
@@ -8,11 +10,6 @@ which can then be added to your Team Drives and/or My Drive folders. This allows
 
 gcloud sdk can be installed with ```curl https://sdk.cloud.google.com | bash```
 or you can go to ```https://cloud.google.com/sdk/docs/quickstarts``` to read more and install in non-linux OSes.
-
-**NOTES:**
-Forked from DashLt at https://gist.github.com/DashLt/4c6ff6e9bde4e9bc4a9ed7066c4efba4 and
-Forked from mc2squared at https://gist.github.com/mc2squared/01c933a8172a26af88285610a0e5af8d
-Borrowed some great ideas from JD at https://gist.github.com/zen-jd/cc6c609b9389443bd7eeac3be8c74710
 
 **export KEYS_DIR=/opt/sa**
 This is the location where you want to store your service account json keys. Please create it before running this script
@@ -61,6 +58,10 @@ The json files will be in the directory you specified, along with a file called 
 *****************
 *****************
 
+**NOTES:**
+Forked from DashLt at https://gist.github.com/DashLt/4c6ff6e9bde4e9bc4a9ed7066c4efba4 and
+Forked from mc2squared at https://gist.github.com/mc2squared/01c933a8172a26af88285610a0e5af8d
+Borrowed some great ideas from JD at https://gist.github.com/zen-jd/cc6c609b9389443bd7eeac3be8c74710
 
 *************************
 *************************
