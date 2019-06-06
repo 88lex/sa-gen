@@ -12,6 +12,10 @@ which can then be added to your Team Drives and/or My Drive folders. This allows
 gcloud sdk can be installed with ```curl https://sdk.cloud.google.com | bash```
 or you can go to ```https://cloud.google.com/sdk/docs/quickstarts``` to read more and install in non-linux OSes.
 
+There are a number of variables that you need to set yourself to run sa-gen for your own account, and to create service accounts and jsons 
+that are names the way you want to name them. These variables are described below. The names and numeric ranges are quite flexible - 
+name them as you like.
+
 **export KEYS_DIR=/opt/sa**
 This is the location where you want to store your service account json keys. Please create it before running this script
 Note that you can create a maximum of 100 service accounts per project, but you can store all of your json keys in this
@@ -33,9 +37,8 @@ as they are created. For example, a base of 'sacopy' will create projects called
 
 **export FIRST_PROJECT_NUM=1
 export LAST_PROJECT_NUM=12**
-
 These are the starting and ending numbers for the project name. As noted above, a base name of 'sacopy` and first number of `1` will
-create projects `sacopy1`, `sacopy2` until the LAST_PROJECT_NUM
+create projects `sacopy1`, `sacopy2` until the LAST_PROJECT_NUM . You can choose your own base name if you like, rather than `sacopy`.
 Note that paid gsuite accounts can create a max of 50 accounts, but can apply for more. Free accounts can create up to 12 projects
 
 **export SA_EMAIL_BASE_NAME=sagen**
