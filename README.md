@@ -9,10 +9,9 @@ directory that you specify in `KEYS_DIR` in the script.
 The script also creates a csv file in the `KEYS_DIR` directory that can be used to bulk upload service account emails to a google group, 
 which can then be added to your Team Drives and/or My Drive folders. This allows you to use service accounts with rclone sync/copy
 
-gcloud sdk can be installed with ```curl https://sdk.cloud.google.com | bash```
-or you can go to ```https://cloud.google.com/sdk/docs/quickstarts``` to read more and install in non-linux OSes.
-Once you have installed gcloud sdk then you need to run `gcloud init` and authorize (auth) to the account for which 
-you want to create service accounts.
+If you have already installed `gcloud sdk` please be sure you have initialized the account for which you wish to create projects ans service accounts.
+If you have not installed `gcloud sdk` please go to `https://cloud.google.com/sdk/docs/quickstarts` and follow instructions to install for your OS,
+Once you have installed gcloud sdk be sure to run `gcloud init` and authorize (auth) to the account for which you want to create service accounts.
 
 There are a number of variables that you need to specify to run sa-gen for your own account, and to create service accounts and jsons 
 that are names the way you want to name them. These variables are described below. The names and numeric ranges are quite flexible - 
@@ -23,11 +22,15 @@ This is the location where you want to store your service account json keys. Ple
 Note that you can create a maximum of 100 service accounts per project, but you can store all of your json keys in this
 directory as long as the json file names do not overlap.
 
-**export ORGANIZATION_ID=123456789012**
-This needs to be replace with your own ORGANIZATION_ID. It is the numeric ID, rather than your account/domain name.
-To find your own ORGANIZATION ID go to https://console.cloud.google.com/iam-admin/settings. Under Organization name you will see the numeric `OrganizationID`. 
-Alternatively you can choose your organization by manually running `gcloud init` after installing the sdk. If you do this then you
-can leave it blank ==> `ORGANIZATION_ID=""`
+**export ORGANIZATION_ID=""**
+This can be left blank ( "" ) if you have already initialized the organization in gcloud sdk with `gcloud init`.
+However if you want to be certain then you can manually replace it with your own ORGANIZATION_ID. It is a numeric ID, rather than your account/domain name.
+The easiest way find your own ORGANIZATION ID is to use the console where you have installed `gcloud sdk` and type the command `gcloud organizations list`.
+This will show you your DISPLAY_NAME, ID, and DIRECTORY_CUSTOMER_ID. The 12 digit number in the middle is your ORGANIZATION_ID. Insert that
+number in the script.
+If for some reason you cannot find the ORGANIZATION_ID using the gcloud sdk you can also go to https://console.cloud.google.com/iam-admin/settings. 
+On that screen go to the top. Choose `Select Project`, then in the popup choose `Select From` and choose your account/domain name. You should see
+a column titled ID. The 12 digit number next to your account/domain name is the ORGANIZATION_ID.
 
 **export GROUP_NAME=mygroup@mydomain.com**
 This is the name of the group that you will share your team drives or my drive folders with.
