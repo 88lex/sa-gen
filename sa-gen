@@ -18,7 +18,7 @@ create_project() {
       gcloud projects create $PROJECT --organization=$ORGANIZATION_ID
       gcloud config set project $PROJECT
       gcloud services enable drive.googleapis.com
-      sleep 10s
+      sleep 3s
 }
 
 create_sas() {
