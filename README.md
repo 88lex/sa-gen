@@ -40,13 +40,20 @@ Normally this will be in the format "some_group_name@googlegroups.com" or "mygro
 
 **export PROJECT_BASE_NAME=sasync**
 This is the base name for a project created with this script. It will be appended with the number of each project
-as they are created. For example, a base of 'sacopy' will create projects called `sacopy1`, `sacopy2` and so on.
+as they are created. For example, a base of 'sacopy' will create projects called `sacopy1`, `sacopy2` and so on. 
+You can choose any base name that you like, rather than `sacopy`.
 
-**export FIRST_PROJECT_NUM=1
-export LAST_PROJECT_NUM=12**
-These are the starting and ending numbers for the project name. As noted above, a base name of 'sacopy` and first number of `1` will
-create projects `sacopy1`, `sacopy2` until the LAST_PROJECT_NUM . You can choose your own base name if you like, rather than `sacopy`.
-Note that paid gsuite accounts can create a max of 50 accounts, but can apply for more. Free accounts can create up to 12 projects
+**export FIRST_PROJECT_NUM=1**    
+**export LAST_PROJECT_NUM=2**
+These are the starting and ending numbers that are appended to the project name. As noted above, a base name of 'sacopy` and first number of `1` will
+create projects `sacopy1`, `sacopy2` until the LAST_PROJECT_NUM .
+
+Use as many projects as you like, within allowable limits. Paid gsuite accounts can create a max of 50 accounts, but can apply for more. 
+Free accounts can create up to 12 projects
+
+If you have already created projects then it is a good idea to start with the next unused project number. For example, if you have 
+created 500 jsons in projects sacopy1 through sacopy5 and you want to create 5 more projects then you would set FIRST_PROJECT_NUM=6 and
+LAST_PROJECT_NUM=10.
 
 **export SA_EMAIL_BASE_NAME=sagen**
 This is the base name for each service account email created with this script. It will be appended with the number of each service account
