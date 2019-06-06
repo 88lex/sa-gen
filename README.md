@@ -3,9 +3,10 @@
 Usage:  `./sa-gen` will run the script using the variables that you insert/edit below.
 
 This script uses gcloud sdk to create multiple projects and up to 100 service accounts per project.
-It also downloads a json file for each service account that is created.
+It also downloads a json file for each service account that is created, putting a copy of the json file into the
+directory that you specify in `KEYS_DIR` in the script.
 
-The script also creates a csv file that can be used to bulk upload service account emails to a google group, 
+The script also creates a csv file in the `KEYS_DIR` directory that can be used to bulk upload service account emails to a google group, 
 which can then be added to your Team Drives and/or My Drive folders. This allows you to use service accounts with rclone sync/copy
 
 gcloud sdk can be installed with ```curl https://sdk.cloud.google.com | bash```
