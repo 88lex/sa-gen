@@ -4,7 +4,7 @@
 # Scroll below or read readme.md to understand the variables below
 
 export KEYS_DIR=/opt/sa
-export ORGANIZATION_ID=123456789012
+export ORGANIZATION_ID=""
 export GROUP_NAME=mygroup@mydomain.com
 export PROJECT_BASE_NAME=sasync
 export FIRST_PROJECT_NUM=1
