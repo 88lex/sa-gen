@@ -76,7 +76,7 @@ The json files will be in the directory you specified, along with a file called 
 
 
 
-**For further information pleasee see https://github.com/88lex/sa-guide for further information. Note that sa-guide may not be completely updated, but should provide some help.**
+**Please see https://github.com/88lex/sa-guide for further information. Note that sa-guide may not be completely updated, but should provide some help.**
 
 
 
