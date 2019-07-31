@@ -3,7 +3,7 @@
 # See readme.md to understand the variables used in this script
 
 export KEYS_DIR=/opt/sa
-export ORGANIZATION_ID=""
+export ORGANIZATION_ID="insertyourorganizationID"
 export GROUP_NAME=mygroup@mydomain.com
 export PROJECT_BASE_NAME=myprojectbasename
 export FIRST_PROJECT_NUM=1
