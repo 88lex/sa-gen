@@ -38,18 +38,21 @@ a column titled ID. The 12 digit number next to your account/domain name is the 
 This is the name of the group that you will share your team drives or my drive folders with.
 Normally this will be in the format "some_group_name@googlegroups.com" or "mygroup@mydomain.com"
 
-**export PROJECT_BASE_NAME=sasync**    
+**export PROJECT_BASE_NAME=myprojectbasename**    
 This is the base name for a project created with this script. It will be appended with the number of each project
-as they are created. For example, a base of 'sacopy' will create projects called `sacopy1`, `sacopy2` and so on. 
-You can choose any base name that you like, rather than `sacopy`.
+as they are created. For example, a base of 'sasync' will create projects called `sasync1`, `sasync2` and so on. 
+You can choose any base name that you like, rather than `sasync`.
 
 **export FIRST_PROJECT_NUM=1**    
 **export LAST_PROJECT_NUM=2**    
-These are the starting and ending numbers that are appended to the project name. As noted above, a base name of 'sacopy` and first number of `1` will
-create projects `sacopy1`, `sacopy2` until the LAST_PROJECT_NUM .
+These are the starting and ending numbers that are appended to the project name. As noted above, a base name of 'sasync` and first number of `1` will
+create projects `sasync1`, `sasync2` until the LAST_PROJECT_NUM .
 
 Use as many projects as you like, within allowable limits. Paid gsuite accounts can create a max of 50 accounts, but can apply for more. 
-Free accounts can create up to 12 projects
+Free accounts can create up to 12 projects.
+
+It is a good idea to NOT delete old projects. Google keeps them for 30 days after deletion and this reduces the number of new projects you can create.
+If you have old projects and want to reuse them then it is easier to rename them to fit your pattern above.
 
 If you have already created projects then it is a good idea to start with the next unused project number. For example, if you have 
 created 500 jsons in projects sacopy1 through sacopy5 and you want to create 5 more projects then you would set FIRST_PROJECT_NUM=6 and
