@@ -5,7 +5,7 @@
 export KEYS_DIR=/opt/sa
 export ORGANIZATION_ID=""
 export GROUP_NAME=mygroup@mydomain.com
-export PROJECT_BASE_NAME=sasync
+export PROJECT_BASE_NAME=myprojectbasename
 export FIRST_PROJECT_NUM=1
 export LAST_PROJECT_NUM=12
 export SA_EMAIL_BASE_NAME=sagen
