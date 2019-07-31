@@ -23,7 +23,7 @@ This is the location where you want to store your service account json keys. Ple
 Note that you can create a maximum of 100 service accounts per project, but you can store all of your json keys in this
 directory as long as the json file names do not overlap.
 
-**export ORGANIZATION_ID=""**    
+**export ORGANIZATION_ID="insertyourorganizationID"**    
 This can be left blank ( "" ) if you have already initialized the organization in gcloud sdk with `gcloud init`. 
 
 However if you want to be certain then you can manually replace it with your own ORGANIZATION_ID. It is a numeric ID, rather than your account/domain name.
