@@ -61,9 +61,9 @@ LAST_PROJECT_NUM=10.
 
 **export SA_EMAIL_BASE_NAME=sagen**    
 This is the base name for each service account email created with this script. It will be appended with the number of each service account
-as they are created. For example, a base of 'sagen' will create service accounts with email addresses
-in the format sagen1@sacopy1.iam.gserviceaccount.com , incrementing up to sagen100@sacopy1.iam.gserviceaccount.com. If you have more
-than one project then the script will increment SA numbers and project numbers, e.g. sagen101@sacopy2.iam.gserviceaccount.com and so on.
+as they are created. For example, an email base of 'sagen' along with a project base of 'sasync' will create service accounts with email addresses
+in the format sagen1@sasync1.iam.gserviceaccount.com , incrementing up to sagen100@sasync1.iam.gserviceaccount.com. If you have more
+than one project then the script will increment SA numbers and project numbers, e.g. sagen101@sasyncy2.iam.gserviceaccount.com and so on.
 
 **export FIRST_SA_NUM=1**    
 FIRST_SA_NUM will be the number of the first service account and json file for this batch that you are creating.
