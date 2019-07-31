@@ -33,7 +33,8 @@ create_sas() {
 }
 
 main() {
-    cat $KEYS_DIR/members.csv >> $KEYS_DIR/allmembers.csv; sort -uo $KEYS_DIR/allmembers.csv $KEYS_DIR/allmembers.csv
+    mkdir -p $KEYS_DIR
+    [ -f $KEYS_DIR/members.csv ] && cat $KEYS_DIR/members.csv >> $KEYS_DIR/allmembers.csv && sort -uo $KEYS_DIR/allmembers.csv $KEYS_DIR/allmembers.csv
     echo "Group Email [Required],Member Email,Member Type,Member Role" >$KEYS_DIR/members.csv
     for project_num in $(seq $FIRST_PROJECT_NUM $LAST_PROJECT_NUM); do
         create_project $PROJECT_BASE_NAME$project_num
@@ -42,4 +43,3 @@ main() {
 }
 
 main
-
