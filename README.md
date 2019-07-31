@@ -9,9 +9,10 @@ directory that you specify in `KEYS_DIR` in the script.
 The script creates a csv file in the `KEYS_DIR` directory that can be used to bulk upload service account emails to a google group, 
 which can then be added to your Team Drives and/or My Drive folders. This allows you to use service accounts with rclone sync/copy
 
-If you have already installed `gcloud sdk` please be sure you have initialized the account for which you wish to create projects ans service accounts.
-If you have not installed `gcloud sdk` please go to https://cloud.google.com/sdk/docs/quickstarts and follow instructions to install for your OS,
-Once you have installed gcloud sdk be sure to run `gcloud init` and authorize (auth) to the account for which you want to create service accounts.
+If you have already installed `gcloud sdk` please be sure you have initialized the account for which you wish to create projects and service accounts.    
+
+If you have not installed `gcloud sdk` please go to https://cloud.google.com/sdk/docs/quickstarts and follow the instructions to install for your OS,
+Once you have installed gcloud sdk be sure to run `gcloud init` and authorize (auth) to the account where you want to create service accounts.
 
 There are a number of variables that you need to specify to run sa-gen for your own account, and to create service accounts and jsons 
 that are names the way you want to name them. These variables are described below. The names and numeric ranges are quite flexible - 
