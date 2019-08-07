@@ -37,7 +37,8 @@ a column titled ID. The 12 digit number next to your account/domain name is the 
 
 **export GROUP_NAME=mygroup@mydomain.com**    
 This is the name of the group that you will share your team drives or my drive folders with.
-Normally this will be in the format "some_group_name@googlegroups.com" or "mygroup@mydomain.com"
+Normally this will be in the format `some_group_name@googlegroups.com` or `mygroup@mydomain.com`
+You can create the group by going to `https://admin.google.com/ac/groups`.
 
 **export PROJECT_BASE_NAME=myprojectbasename**    
 This is the base name for a project created with this script. It will be appended with the number of each project
