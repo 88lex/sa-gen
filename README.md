@@ -2,6 +2,10 @@
 
 Usage:  `./sa-gen` will run the script using the variables that you insert/edit below.
 
+For sa-gen to run correctly you MUST first edit sa-gen itself, inserting your own information in the fields described below.    
+Be sure to run `chmod +x sa-gen` to all the script to execute.
+
+
 This script uses gcloud sdk to create multiple projects and up to 100 service accounts per project.
 It also downloads a json file for each service account that is created, putting a copy of the json file into the
 directory that you specify in `KEYS_DIR` in the script.
