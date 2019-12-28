@@ -21,7 +21,7 @@ create_project() {
 }
 
 create_sas() {
-    let LAST_SA_NUM=$FIRST_SA_NUM+$NUM_SAS_PER_PROJECT
+    let LAST_SA_NUM=$FIRST_SA_NUM+$NUM_SAS_PER_PROJECT-1
     for name in $(seq $FIRST_SA_NUM $LAST_SA_NUM); do
       echo creating service account for $SA_EMAIL_BASE_NAME$name
       gcloud iam service-accounts create $SA_EMAIL_BASE_NAME$name
