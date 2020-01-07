@@ -1,0 +1,19 @@
+#!/bin/bash
+# Simple script to add / update the display name for your existing service accounts in all projects
+
+# Add a filter if you only want to include some projects e.g. "sacopy" for sacopy1, sacopy2 etc
+FILTER_PROJECTS=""
+
+proj_list=`gcloud projects list --sort-by=PROJECT_ID | grep "$FILTER_PROJECTS" | cut -d' ' -f1`
+
+for project in $proj_list;do
+  gcloud config set project $project
+  echo -e "Project name is $project \n"
+  sa_list=`gcloud iam service-accounts list --format='value(email)' | sort`
+  for sa in $sa_list;do
+    sa_name=${sa%@*}
+    echo -e "Service Account is $sa"
+    echo -e "Service Account Name is ${sa%@*}"
+    gcloud iam service-accounts update $sa --display-name ${sa%@*}
+  done
+done
