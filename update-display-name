@@ -13,9 +13,9 @@ for project in $proj_list;do
   echo -e "Project name is $project \n"
   sa_list=`gcloud iam service-accounts list --format='value(email)' | sort`
   for sa in $sa_list;do
-    sa_name="${sa%@*}_$UNIQUE_ID"
+    sa_name="$UNIQUE_ID${sa%@*}"
     echo -e "Service Account is $sa"
     echo -e "Service Account Name is ${sa%@*}"
-    gcloud iam service-accounts update $sa --display-name $sa_name
+    gcloud iam service-accounts update $sa --display-name "$sa_name"
   done
 done
