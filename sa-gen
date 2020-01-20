@@ -24,7 +24,7 @@ create_sas() {
     let LAST_SA_NUM=$FIRST_SA_NUM+$NUM_SAS_PER_PROJECT
     for name in $(seq $FIRST_SA_NUM $LAST_SA_NUM); do
       echo creating service account for $SA_EMAIL_BASE_NAME$name
-      gcloud iam service-accounts create $SA_EMAIL_BASE_NAME$name
+      gcloud iam service-accounts create $SA_EMAIL_BASE_NAME$name --display-name=$SA_EMAIL_BASE_NAME$name
       gcloud iam service-accounts keys create $KEYS_DIR/$name.json --iam-account=$SA_EMAIL_BASE_NAME$name@$PROJECT.iam.gserviceaccount.com      
       echo "$GROUP_NAME,$SA_EMAIL_BASE_NAME$name@$PROJECT.iam.gserviceaccount.com,USER,MEMBER" | tee -a $KEYS_DIR/members.csv $KEYS_DIR/allmembers.csv
     #sleep 1s
