@@ -49,7 +49,7 @@ You can create the group by going to `https://admin.google.com/ac/groups`.
 **export PROJECT_BASE_NAME=myprojectbasename**
 This is the base name for a project created with this script. It will be appended with the number of each project
 as they are created. For example, a base of 'sasync' will create projects called `sasync1`, `sasync2` and so on.
-You can choose any base name that you like, rather than `sasync`.
+You should choose a base name likely to be unique to your organisation.
 NOTE: If using a domain that you share with others, then use a name other than `sasync` as sa-gen will fail if that project name has already been used.
 
 **export FIRST_PROJECT_NUM=1**
