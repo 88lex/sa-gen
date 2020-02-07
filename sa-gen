@@ -13,23 +13,26 @@ export FIRST_SA_NUM=1
 export NUM_SAS_PER_PROJECT=100
 
 create_project() {
-      export PROJECT=$1
-      gcloud projects create $PROJECT --organization=$ORGANIZATION_ID
-      gcloud config set project $PROJECT
-      gcloud services enable drive.googleapis.com
-      sleep 3s
+    export PROJECT=$1
+    gcloud projects create $PROJECT --organization=$ORGANIZATION_ID
+    gcloud config set project $PROJECT
+    gcloud services enable drive.googleapis.com
+    sleep 5s
 }
 
 create_sas() {
     let LAST_SA_NUM=$FIRST_SA_NUM+$NUM_SAS_PER_PROJECT
     for name in $(seq $FIRST_SA_NUM $LAST_SA_NUM); do
-      echo creating service account for $SA_EMAIL_BASE_NAME$name
-      gcloud iam service-accounts create $SA_EMAIL_BASE_NAME$name --display-name=$SA_EMAIL_BASE_NAME$name
-      gcloud iam service-accounts keys create $KEYS_DIR/$name.json --iam-account=$SA_EMAIL_BASE_NAME$name@$PROJECT.iam.gserviceaccount.com      
-      echo "$GROUP_NAME,$SA_EMAIL_BASE_NAME$name@$PROJECT.iam.gserviceaccount.com,USER,MEMBER" | tee -a $KEYS_DIR/members.csv $KEYS_DIR/allmembers.csv
-    #sleep 1s
+        saname="$SA_EMAIL_BASE_NAME""$name"
+        echo creating service account for $saname
+        gcloud iam service-accounts create $saname  --display-name=$saname
+        gcloud iam service-accounts keys create $KEYS_DIR/$name.json --iam-account=$saname@$PROJECT.iam.gserviceaccount.com
+        # NEED to fix syntax for below command to add SA email to group
+        #gcloud iam service-accounts add-iam-policy-binding "$saname@$PROJECT.iam.gserviceaccount.com" --member="group:$GROUP_NAME" --role="roles/viewer"
+        echo "$GROUP_NAME,$saname@$PROJECT.iam.gserviceaccount.com,USER,MEMBER" | tee -a $KEYS_DIR/members.csv $KEYS_DIR/allmembers.csv
     done
     let FIRST_SA_NUM=$FIRST_SA_NUM+100
+    sleep 5s
 }
 
 main() {
