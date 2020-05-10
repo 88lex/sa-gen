@@ -1,6 +1,17 @@
-**sa-gen**
+**sagen**
+
+This script is not enormously difficult, but does require reading carefully and installing/setting up gcloud sdk.
 
 Usage:  `./sa-gen` will run the script using the variables that you insert/edit below.
+
+CHANGELOG: The updated sagen does exactly what the old version did, except
+  - Google's back end sometimes lags for a few seconds between creating projects or service accounts and giving the sdk access to see them.
+  - As a result, sagen now has variable delays for each cycle of creating service accounts and between each 'function'. The functions are:
+    - Creating a project. If a project exists an ERROR message will tell you. It is non-fatal, ignore it.
+    - Enabling apis that give the SAs permission to access Google Drive and gsheets. Others can be added manually if you like.
+    - Creating service accounts (SAs) in each project that has been created.
+    - Downloading json keys that include a token that allows you to access and act upon Drive and gsheet resources. Guard the keys with your life.
+    - Creating a members.csv (current) and allmembers.csv (cumulative) list of all SA emails, which can be added to My Drive, a Shared Drive (Team Drive) and/or a gsheet. These emails can be added individualy or in bulk (see Bulk Add to Group).
 
 For sa-gen to run correctly you MUST first edit sa-gen itself, inserting your own information in the fields described below.
 Be sure to run `chmod +x sa-gen` to all the script to execute.

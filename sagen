@@ -12,7 +12,8 @@ SA_EMAIL_BASE_NAME="insertuniquename"
 FIRST_SA_NUM=1
 NUM_SAS_PER_PROJECT=100
 CYCLE_DELAY=0.1s                  # If issues with Google back end not recognizing SAs increase this number. Set = 0 for no delay
-SECTION_DELAY=0.1s               # If issues with Google back end not recognizing SAs increase this number. Set = 0 for no delay
+SECTION_DELAY=5s               # If issues with Google back end not recognizing SAs increase this number. Set = 0 for no delay
+
 
 create_projects() {
     PROJECT="$PROJECT_BASE_NAME$project_num"
@@ -49,6 +50,9 @@ create_sas() {
         set +x
         sleep $CYCLE_DELAY
     done
+    sleep $SECTION_DELAY
+    SA_COUNT=`gcloud iam service-accounts list | grep gservice | wc -l`
+    echo -e "Total number of service accounts (SAs) in project $PROJECT = $SA_COUNT"
     let COUNT=$COUNT+$NUM_SAS_PER_PROJECT
 }
 
@@ -58,6 +62,7 @@ create_keys() {
     gcloud config set project $PROJECT
     set +x
     echo -e "create json keys for $PROJECT"
+    TOTAL_JSONS_BEF=`ls $KEYS_DIR | grep ".json" | wc -l`
     let LAST_SA_NUM=$COUNT+$NUM_SAS_PER_PROJECT-1
     for name in $(seq $COUNT $LAST_SA_NUM); do
         saname="$SA_EMAIL_BASE_NAME""$name"
@@ -70,13 +75,21 @@ create_keys() {
         echo "$GROUP_NAME,$saname@$PROJECT.iam.gserviceaccount.com,USER,MEMBER" | tee -a $KEYS_DIR/members.csv $KEYS_DIR/allmembers.csv
         sleep $CYCLE_DELAY
     done
+    MEMBER_COUNT=`cat /opt/sa/members.csv | grep "gservice" | wc -l`
+    echo -e "\nNumber of service accounts in members.csv = $MEMBER_COUNT"
+    TOTAL_JSONS_NOW=`ls $KEYS_DIR | grep ".json" | wc -l`
+    let TOTAL_JSONS_MADE=$TOTAL_JSONS_NOW-$TOTAL_JSONS_BEF
+    echo -e "Total SA json keys created for project $PROJECT = $TOTAL_JSONS_MADE"
     let COUNT=$COUNT+$NUM_SAS_PER_PROJECT
 }
 
 main() {
     mkdir -p $KEYS_DIR
-    [ -f $KEYS_DIR/members.csv ] && cat $KEYS_DIR/members.csv >> $KEYS_DIR/allmembers.csv && sort -uo $KEYS_DIR/allmembers.csv $KEYS_DIR/allmembers.csv
+    [ -f $KEYS_DIR/members.csv ] && cat $KEYS_DIR/members.csv >> $KEYS_DIR/allmembers.csv && \
+    sort -uo $KEYS_DIR/allmembers.csv $KEYS_DIR/allmembers.csv
     echo "Group Email [Required],Member Email,Member Type,Member Role" >$KEYS_DIR/members.csv
+    TOTAL_JSONS_START=`ls $KEYS_DIR | grep ".json" | wc -l`
+    echo -e "\nTotal SA json keys before running sa-gen = $TOTAL_JSONS_START"
     for function in create_projects enable_apis create_sas create_keys ; do
         COUNT=$FIRST_SA_NUM
         for project_num in $(seq $FIRST_PROJECT_NUM $LAST_PROJECT_NUM); do
@@ -84,6 +97,11 @@ main() {
             sleep $SECTION_DELAY
         done
     done
+    TOTAL_JSONS_END=`ls $KEYS_DIR | grep ".json" | wc -l`
+    echo -e "\n\nTotal SA json keys BEFORE running sa-gen = $TOTAL_JSONS_START"
+    echo -e "Total SA json keys AFTER running sa-gen  = $TOTAL_JSONS_END"
+    let TOTAL_JSONS_MADE=$TOTAL_JSONS_END-$TOTAL_JSONS_START
+    echo -e "Total SA jsons CREATED                   = $TOTAL_JSONS_MADE"
 }
 
 main
