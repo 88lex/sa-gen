@@ -29,8 +29,7 @@ enable_apis() {
     echo -e "Enabling apis for project = $PROJECT"
     set -x
     gcloud config set project $PROJECT
-    gcloud services enable drive.googleapis.com
-    gcloud services enable sheets.googleapis.com
+    gcloud services enable drive.googleapis.com sheets.googleapis.com
     set +x
     sleep $CYCLE_DELAY
 }
