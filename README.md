@@ -1,4 +1,5 @@
 **sagen**
+Ref: https://github.com/88lex/sa-guide For more info
 
 This script is not enormously difficult, but does require reading carefully and installing/setting up gcloud sdk.
 
