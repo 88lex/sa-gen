@@ -260,7 +260,7 @@ if __name__ == '__main__':
         exit()
 
     parse = ArgumentParser(description='A tool to create and manage Google service accounts.')
-    parse.add_argument('--path','-p',default='accounts',help='Directory for account credential files.\n')
+    parse.add_argument('--path','-p',default='accounts',help='Directory for your key.json files.\n')
     parse.add_argument('--token','-t',default='token.pickle',help='Specify the pickle token file path.')
     parse.add_argument('--credentials','-cr',default='credentials.json',help='Specify the credentials file path.')
     parse.add_argument('--list-projects','-lp',default=False,action='store_true',help='List projects viewable by the user.')

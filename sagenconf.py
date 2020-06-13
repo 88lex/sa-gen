@@ -14,9 +14,9 @@ sleep_time = 10
 
 #sa_count = 0
 
-# credentials='credentials.json'
+# credentials='/credentials/credentials.json'
 # token='token.pickle'
-# path=None
+# path='/accounts'
 # list_projects=False
 # list_sas=None
 # create_projects=None
