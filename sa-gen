@@ -29,7 +29,8 @@ enable_apis() {
     echo -e "Enabling apis for project = $PROJECT"
     set -x
     gcloud config set project $PROJECT
-    gcloud services enable drive.googleapis.com sheets.googleapis.com
+    gcloud services enable drive.googleapis.com sheets.googleapis.com \
+    admin.googleapis.com cloudresourcemanager.googleapis.com servicemanagement.googleapis.com
     set +x
     sleep $CYCLE_DELAY
 }
@@ -70,7 +71,7 @@ create_keys() {
         gcloud iam service-accounts keys create $KEYS_DIR/$name.json --iam-account=$saname@$PROJECT.iam.gserviceaccount.com
         set +x
         #   NEED to fix syntax for below command to add SA email to group
-        #   gcloud iam service-accounts add-iam-policy-binding "$saname@$PROJECT.iam.gserviceaccount.com" --member="group:$GROUP_NAME" --role="roles/viewer"
+        #gcloud iam service-accounts add-iam-policy-binding "$saname@$PROJECT.iam.gserviceaccount.com" --member="group:$GROUP_NAME" --role="roles/editor"
         echo "$GROUP_NAME,$saname@$PROJECT.iam.gserviceaccount.com,USER,MEMBER" | tee -a $KEYS_DIR/members.csv $KEYS_DIR/allmembers.csv
         sleep $CYCLE_DELAY
     done
