@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # usage: sagen.py --action flag
-# example: sagen.py --list-projects
+# example: ./sagen.py --list-projects OR ./sagen.py -lp
 
 import sys, errno, os, pickle
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -27,7 +27,6 @@ def _create_accounts(iam,project,sas_per_project):
     print(f'Creating ' + str(count) + ' service accounts in project ' + project)
     for i in range(count):
         sa_id = email_prefix + f"{next_sa_num:06}"
-        #print("Creating service account = ", sa_id)
         next_sa_num += 1
         batch.add(iam.projects().serviceAccounts().create(name='projects/' + project, body={ 'accountId': sa_id, 'serviceAccount': { 'displayName': sa_id }}))
     batch.execute()
@@ -147,24 +146,6 @@ def _delete_sas(iam,project):
         batch.add(iam.projects().serviceAccounts().delete(name=i['name']))
     batch.execute()
 
-# def serviceaccountfactory(
-#     credentials='credentials.json',
-#     token='token.pickle',
-#     path=None,
-#     list_projects=False,
-#     list_sas=None,
-#     create_projects=None,
-#     max_projects=max_proj,
-#     enable_services=None,
-#     services=['iam','drive'],
-#     create_sas=None,
-#     delete_sas=None,
-#     download_keys=None,
-#     sas_per_project=100,
-#     *args,
-#     **kwargs
-#     ):
-
 def serviceaccountfactory(credentials,token,path,list_projects,list_sas,create_projects,max_projects,
     enable_services,services,create_sas,delete_sas,download_keys,sas_per_project,*args,**kwargs):
 
@@ -240,16 +221,6 @@ def serviceaccountfactory(credentials,token,path,list_projects,list_sas,create_p
             for i in sorted(stc):
                 _create_accounts(iam,i,sas_per_project)
             #_create_accounts(iam, stc, sas_per_project)
-    # if create_sas:
-    #     stc = []
-    #     stc.append(create_sas)
-    #     if create_sas == '~':
-    #         stc = sorted(selected_projects)
-    #     elif create_sas == '*':
-    #         stc =  sorted(_get_projects(cloud))
-    #     for i in sorted(stc):
-    #         _create_accounts(iam,i,sas_per_project)
-    #     #_create_accounts(iam, stc, sas_per_project)
 
     if download_keys:
         try:
@@ -268,36 +239,16 @@ def serviceaccountfactory(credentials,token,path,list_projects,list_sas,create_p
                 std = _get_projects(cloud)
             _create_sa_keys(iam,std,path)
             #next_json_key_num = _create_sa_keys(iam,std,path)
-    # if delete_sas:
-    #         std = []
-    #         std.append(str(delete_sas))
-    #         if delete_sas == '~':
-    #             std = sorted(selected_projects)
-    #         elif delete_sas == '*':
-    #             std = sorted(_get_projects(cloud))
-    #         for i in sorted(std):
-    #             print('Deleting service accounts in %s' % i)
-    #             _delete_sas(iam,i)
 
     if delete_sas:
         for proj in delete_sas:
-            # print("delete_sas = ", delete_sas)
-            # print(type(delete_sas))
-            # print("proj = ", proj)
-            #exit()
             std = []
             std.append(proj)
-            # if delete_sas == '~':
             if proj == '~':
                 std = sorted(selected_projects)
-            # elif delete_sas == '*':
             elif proj == '*':
                 std = sorted(_get_projects(cloud))
             for i in sorted(std):
-                # print("std = ", std)
-                # print("i = ", i)
-                # print(type(i))
-                # exit()
                 print('Deleting service accounts in %s' % i)
                 _delete_sas(iam,i)
 
@@ -325,15 +276,6 @@ if __name__ == '__main__':
     parse.add_argument('--quick-setup','-qs',default=None,type=int,help='Create projects, enable services, create service accounts and download keys. ')
     parse.add_argument('--new-only','-n',default=False,action='store_true',help='Do not use existing projects.')
     args = parse.parse_args()
-
-    # print("Printing all args")
-    # print(args)
-    # print(type(args))
-    # print(**vars(args))
-    # #print(argparse.Namespace())
-    # #print(locals())
-    # #print(globals())
-    # exit()
     
     # If credentials file is invalid, search for one.
     if not os.path.exists(args.credentials):
@@ -371,20 +313,7 @@ if __name__ == '__main__':
         args.download_keys = opt
 
     resp = serviceaccountfactory(**vars(args))
-    # resp = serviceaccountfactory(
-    #     path=args.path,
-    #     token=args.token,
-    #     credentials=args.credentials,
-    #     list_projects=args.list_projects,
-    #     list_sas=args.list_sas,
-    #     create_projects=args.create_projects,
-    #     max_projects=args.max_projects,
-    #     create_sas=args.create_sas,
-    #     delete_sas=args.delete_sas,
-    #     enable_services=args.enable_services,
-    #     services=args.services,
-    #     download_keys=args.download_keys
-    # )
+
     if resp is not None:
         if args.list_projects:
             if resp:

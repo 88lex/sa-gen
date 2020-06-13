@@ -7,9 +7,9 @@ json_key_prefix = ""
 
 max_proj = 50
 next_project_num = 1
-next_sa_num = 10001
+next_sa_num = 1
 sas_per_project = 100
-next_json_key_num = 10001
+next_json_key_num = 1
 sleep_time = 10
 
 #sa_count = 0
