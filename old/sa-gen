@@ -1,0 +1,106 @@
+#!/bin/bash
+# Running this script requires gcloud command line tools. To install go to https://cloud.google.com/sdk/docs/quickstarts
+# See readme.md to understand the variables used in this script
+
+KEYS_DIR=/opt/sa
+ORGANIZATION_ID="insertyourorganizationID"
+GROUP_NAME="mygroup@mydomain.com"
+PROJECT_BASE_NAME="myprojectbasename"
+FIRST_PROJECT_NUM=1
+LAST_PROJECT_NUM=3
+SA_EMAIL_BASE_NAME="insertuniquename"
+FIRST_SA_NUM=1
+NUM_SAS_PER_PROJECT=100
+CYCLE_DELAY=0.1s                  # If issues with Google back end not recognizing SAs increase this number. Set = 0 for no delay
+SECTION_DELAY=5s               # If issues with Google back end not recognizing SAs increase this number. Set = 0 for no delay
+
+
+create_projects() {
+    PROJECT="$PROJECT_BASE_NAME$project_num"
+    echo -e "Creating project = $PROJECT"
+    set -x
+    gcloud projects create $PROJECT --organization=$ORGANIZATION_ID
+    set +x
+    sleep $CYCLE_DELAY
+}
+
+enable_apis() {
+    PROJECT="$PROJECT_BASE_NAME$project_num"
+    echo -e "Enabling apis for project = $PROJECT"
+    set -x
+    gcloud config set project $PROJECT
+    gcloud services enable drive.googleapis.com sheets.googleapis.com
+    set +x
+    sleep $CYCLE_DELAY
+}
+
+create_sas() {
+    PROJECT="$PROJECT_BASE_NAME$project_num"
+    set -x
+    gcloud config set project $PROJECT
+    set +x
+    echo -e "Create service accounts for project = $PROJECT"
+    let LAST_SA_NUM=$COUNT+$NUM_SAS_PER_PROJECT-1
+    for name in $(seq $COUNT $LAST_SA_NUM); do
+        saname="$SA_EMAIL_BASE_NAME""$name"
+        echo -e "Creating service account number $name in project = $PROJECT ==> $saname@$PROJECT"
+        set -x
+        gcloud iam service-accounts create $saname  --display-name=$saname
+        set +x
+        sleep $CYCLE_DELAY
+    done
+    sleep $SECTION_DELAY
+    SA_COUNT=`gcloud iam service-accounts list | grep gservice | wc -l`
+    echo -e "Total number of service accounts (SAs) in project $PROJECT = $SA_COUNT"
+    let COUNT=$COUNT+$NUM_SAS_PER_PROJECT
+}
+
+create_keys() {
+    PROJECT="$PROJECT_BASE_NAME$project_num"
+    set -x
+    gcloud config set project $PROJECT
+    set +x
+    echo -e "create json keys for $PROJECT"
+    TOTAL_JSONS_BEF=`ls $KEYS_DIR | grep ".json" | wc -l`
+    let LAST_SA_NUM=$COUNT+$NUM_SAS_PER_PROJECT-1
+    for name in $(seq $COUNT $LAST_SA_NUM); do
+        saname="$SA_EMAIL_BASE_NAME""$name"
+        echo -e "Creating json key $name.json in project = $PROJECT for service account = $saname@$PROJECT"
+        set -x
+        gcloud iam service-accounts keys create $KEYS_DIR/$name.json --iam-account=$saname@$PROJECT.iam.gserviceaccount.com
+        set +x
+        #   NEED to fix syntax for below command to add SA email to group
+        #   gcloud iam service-accounts add-iam-policy-binding "$saname@$PROJECT.iam.gserviceaccount.com" --member="group:$GROUP_NAME" --role="roles/viewer"
+        echo "$GROUP_NAME,$saname@$PROJECT.iam.gserviceaccount.com,USER,MEMBER" | tee -a $KEYS_DIR/members.csv $KEYS_DIR/allmembers.csv
+        sleep $CYCLE_DELAY
+    done
+    MEMBER_COUNT=`cat /opt/sa/members.csv | grep "gservice" | wc -l`
+    echo -e "\nNumber of service accounts in members.csv = $MEMBER_COUNT"
+    TOTAL_JSONS_NOW=`ls $KEYS_DIR | grep ".json" | wc -l`
+    let TOTAL_JSONS_MADE=$TOTAL_JSONS_NOW-$TOTAL_JSONS_BEF
+    echo -e "Total SA json keys created for project $PROJECT = $TOTAL_JSONS_MADE"
+    let COUNT=$COUNT+$NUM_SAS_PER_PROJECT
+}
+
+main() {
+    mkdir -p $KEYS_DIR
+    [ -f $KEYS_DIR/members.csv ] && cat $KEYS_DIR/members.csv >> $KEYS_DIR/allmembers.csv && \
+    sort -uo $KEYS_DIR/allmembers.csv $KEYS_DIR/allmembers.csv
+    echo "Group Email [Required],Member Email,Member Type,Member Role" >$KEYS_DIR/members.csv
+    TOTAL_JSONS_START=`ls $KEYS_DIR | grep ".json" | wc -l`
+    echo -e "\nTotal SA json keys before running sa-gen = $TOTAL_JSONS_START"
+    for function in create_projects enable_apis create_sas create_keys ; do
+        COUNT=$FIRST_SA_NUM
+        for project_num in $(seq $FIRST_PROJECT_NUM $LAST_PROJECT_NUM); do
+            eval $function 
+            sleep $SECTION_DELAY
+        done
+    done
+    TOTAL_JSONS_END=`ls $KEYS_DIR | grep ".json" | wc -l`
+    echo -e "\n\nTotal SA json keys BEFORE running sa-gen = $TOTAL_JSONS_START"
+    echo -e "Total SA json keys AFTER running sa-gen  = $TOTAL_JSONS_END"
+    let TOTAL_JSONS_MADE=$TOTAL_JSONS_END-$TOTAL_JSONS_START
+    echo -e "Total SA jsons CREATED                   = $TOTAL_JSONS_MADE"
+}
+
+main
