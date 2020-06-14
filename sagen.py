@@ -194,7 +194,7 @@ def serviceaccountfactory(credentials,token,path,list_projects,list_sas,create_p
             else:
                 sys.exit('Please reduce the value n for --quick-setup.\n'
                        'You can create %d projects in total, and have %d projects already.\n'
-                        % (create_projects, max_projects, current_count))
+                        % (max_projects, current_count))
         else:
             print('Will overwrite all service accounts in existing projects.\n'
                   'So make sure you have some projects already.')
