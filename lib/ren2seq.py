@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import json, os, sys
 
-# default_dir = "/opt/test/accounts/"
-
 def ren_seq(dir):
     filelist = os.listdir(dir)
     new_name = []

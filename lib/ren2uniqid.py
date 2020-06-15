@@ -2,8 +2,6 @@
 
 import json, os, sys
 
-# default_dir = "/opt/test/accounts/"
-
 def ren_uniq(dir):
     filelist = os.listdir(dir)
     new_name = []

@@ -7,13 +7,14 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from argparse import ArgumentParser
-import argparse
+from configargparse import ArgParser
+# from argparse import ArgumentParser
 from base64 import b64decode
 from json import loads
 from time import sleep
 from glob import glob
-from sagenconf import *
+# from sagenconf import *
+from lib import ren2uniqid, ren2email, ren2seq
 
 SCOPES = ['https://www.googleapis.com/auth/drive','https://www.googleapis.com/auth/cloud-platform','https://www.googleapis.com/auth/iam']
 project_create_ops = []
@@ -64,8 +65,8 @@ def _create_projects(cloud,count,next_project_num):
     for i in range(count):
         next_project_str = str(f"{next_project_num:04}")
         new_proj = project_prefix + next_project_str
-        print(f'The new project is named ' + new_proj + ' using prefix ' + project_prefix + ' and number ' + str(next_project_num))
-        next_project_num = next_project_num + 1
+        print(f'The new project is named ' + new_proj + ' using prefix ' + project_prefix + ' and number ' + next_project_str)
+        next_project_num += 1
         new_projs.append(new_proj)
         batch.add(cloud.projects().create(body={'project_id':new_proj}))
     batch.execute()
@@ -259,23 +260,72 @@ if __name__ == '__main__':
         print("\n=== sagen.py requires at least one argument. See options above. ===\n")
         exit()
 
-    parse = ArgumentParser(description='A tool to create and manage Google service accounts.')
-    parse.add_argument('--path','-p',default='accounts',help='Directory for your key.json files.\n')
-    parse.add_argument('--token','-t',default='token.pickle',help='Specify the pickle token file path.')
-    parse.add_argument('--credentials','-cr',default='credentials/credentials.json',help='Specify the credentials file path.')
-    parse.add_argument('--list-projects','-lp',default=False,action='store_true',help='List projects viewable by the user.')
-    parse.add_argument('--list-sas','-ls',default=False,help='List service accounts in a project.')
-    parse.add_argument('--create-projects','-cp',type=int,default=None,help='Creates up to N projects.')
-    parse.add_argument('--max-projects','-mp',type=int,default=12,help='Max number of project allowed. Default: 12')
-    parse.add_argument('--enable-services','-es',default=None,help='Enables services on the project. Default: IAM and Drive')
-    parse.add_argument('--services','-s',nargs='+',default=['iam','drive'],help='Specify a different set of services to enable. Overrides the default.')
-    parse.add_argument('--create-sas','-cs',nargs='+',default=None,help='Create service accounts in a project.')
-    parse.add_argument('--sas-per-project','-spp',type=int,default=100,help='Number of service accounts created per project.')
-    parse.add_argument('--delete-sas','-ds',nargs='+',default=None,help='Delete service accounts in a project.')
-    parse.add_argument('--download-keys','-k',nargs='+',default=None,help='Download keys for all the service accounts in a project.')
-    parse.add_argument('--quick-setup','-qs',default=None,type=int,help='Create projects, enable services, create service accounts and download keys. ')
-    parse.add_argument('--new-only','-n',default=False,action='store_true',help='Do not use existing projects.')
+    # parse = ArgumentParser(description='A tool to create and manage Google service accounts.')
+    # p = configargparse.ArgParser(default_config_files=['/etc/app/conf.d/*.conf', '~/.my_settings'])
+    parse = ArgParser(default_config_files=['sagen.conf'],description='A tool to create and manage Google service accounts.')
+    # parse.add('-c', '--config', is_config_file=True, help='path and filename of config file')
+    parse.add('-pa','--path',default='accounts',help='Path to key.json files.\n')
+    parse.add('-t','--token',default='token.pickle',help='Specify the pickle token file path.')
+    parse.add('-cr','--credentials',default='credentials/credentials.json',help='Specify the credentials file path.')
+    parse.add('-lp','--list-projects',default=False,action='store_true',help='List projects viewable by the user.')
+    parse.add('-ls','--list-sas',default=False,help='List service accounts in a project.')
+    parse.add('-cp','--create-projects',type=int,default=None,help='Creates up to N projects.')
+    parse.add('-mp','--max-projects',type=int,default=50,help='Max number of project allowed. Default: 50')
+    parse.add('-es','--enable-services',default=None,help='Enables services on the project. Default: IAM and Drive')
+    parse.add('-s','--services',nargs='+',default=['iam','drive'],help='Specify a different set of services to enable. Overrides the default.')
+    parse.add('-cs','--create-sas',nargs='+',default=None,help='Create service accounts in a project.')
+    parse.add('-spp','--sas-per-project',type=int,default=100,help='Number of service accounts created per project.')
+    parse.add('-ds','--delete-sas',nargs='+',default=None,help='Delete service accounts in a project.')
+    parse.add('-k','--download-keys',nargs='+',default=None,help='Download keys for all the service accounts in a project.')
+    parse.add('-qs','--quick-setup',default=None,type=int,help='Create projects, enable services, create service accounts and download keys. ')
+    parse.add('-no','--new-only',default=False,action='store_true',help='Do not use existing projects.')
+    parse.add('-np','--next-project-num',default=1,type=int,help='Starting number for new projects created.')
+    parse.add('-ns','--next-sa-num',default=1,type=int,help='Starting number for batch of service accounts.')
+    parse.add('-nj','--next-json-key-num',default=1,type=int,help='Starting number for json key. Typically same as next-sa-num.')
+    parse.add('-pp','--project-prefix',default="proj",help='Starting number for batch of service accounts.')
+    parse.add('-ep','--email-prefix',default="svcacct",help='prefix of your service account name.')
+    parse.add('-jp','--json-key-prefix',default="",help='Starting number for batch of service accounts.')
+    parse.add('-st','--sleep-time',default="10",type=int,help='Time to sleep - let google backend digest batches')
+    parse.add('-re','--rename-keys-to-email',default=False,action='store_true',help='Rename json keys to svc account email basename')
+    parse.add('-rs','--rename-keys-to-seq',default=False,action='store_true',help='Rename json keys to numeric from svc account email')
+    parse.add('-ru','--rename-keys-to-uniq',default=False,action='store_true',help='Rename json keys to svc account unique ID')
+    parse.add('-rk','--rename-keys',default=None,choices=['email', 'seq', 'uniq'],help='Rename json keys. Choices email, seq or uniq')
     args = parse.parse_args()
+    print(parse.format_values())
+
+    if args.rename_keys:
+        keypath = args.path + '/'
+        print('Renaming json keys in ' + args.path + ' to ' + args.rename_keys)
+        if args.rename_keys == "email":
+            ren2email.ren_email(keypath)
+        elif args.rename_keys == "seq":
+            ren2seq.ren_seq(keypath)
+        elif args.rename_keys == "uniq":
+            ren2uniqid.ren_uniq(keypath)
+        print("Finished renaming json key files")
+        exit()
+
+
+    if args.rename_keys_to_email:
+        keypath = args.path + '/'
+        print('Renaming json keys in ' + args.path + ' to the service account email basename')
+        ren2email.ren_email(keypath)
+        print("Finished renaming json key files")
+        exit()
+
+    if args.rename_keys_to_seq:
+        keypath = args.path + '/'
+        print('Renaming json keys in ' + args.path + ' to numeric from svc account email')
+        ren2seq.ren_seq(keypath)
+        print("Finished renaming json key files")
+        exit()
+
+    if args.rename_keys_to_uniq:
+        keypath = args.path + '/'
+        print('Renaming json keys in ' + args.path + ' to svc account unique ID')
+        ren2uniqid.ren_uniq(keypath)
+        print("Finished renaming json key files")
+        exit()
     
     # If credentials file is invalid, search for one.
     if not os.path.exists(args.credentials):
@@ -329,3 +379,4 @@ if __name__ == '__main__':
                     print('  %s (%s)' % (i['email'],i['uniqueId']))
             else:
                 print('No service accounts.')
+

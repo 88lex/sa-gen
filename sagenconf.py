@@ -5,17 +5,17 @@ email_prefix = "sagen"
 project_prefix = "sync"
 json_key_prefix = ""
 
-max_proj = 50
+max_projects = 50
 next_project_num = 1
 next_sa_num = 1
 sas_per_project = 100
 next_json_key_num = 1
-sleep_time = 10
+sleep_time = 1
 
 #sa_count = 0
 
-# credentials='/credentials/credentials.json'
-# token='token.pickle'
+credentials='credentials/credentials.json'
+token='credentials/token.pickle'
 # path='/accounts'
 # list_projects=False
 # list_sas=None

@@ -2,10 +2,7 @@
 
 import json, os, sys
 
-# default_dir = "/opt/test/accounts/"
-
 def ren_email(dir):
-    # dir = sys.argv[1]
     filelist = os.listdir(dir)
     new_name = []
     for file in sorted(filelist):
