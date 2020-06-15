@@ -8,12 +8,10 @@ from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from configargparse import ArgParser
-# from argparse import ArgumentParser
 from base64 import b64decode
 from json import loads
 from time import sleep
 from glob import glob
-# from sagenconf import *
 from lib import ren2uniqid, ren2email, ren2seq
 
 SCOPES = ['https://www.googleapis.com/auth/drive','https://www.googleapis.com/auth/cloud-platform','https://www.googleapis.com/auth/iam']
@@ -21,20 +19,20 @@ project_create_ops = []
 current_key_dump = []
 
 # Create service accounts
-def _create_accounts(iam,project,sas_per_project):
+# def _create_accounts(iam,project,sas_per_project,email_prefix,*args,**kwargs):
+def _create_accounts(iam,project,sas_per_project,email_prefix,sleep_time):
     batch = iam.new_batch_http_request(callback=_def_batch_resp)
     global next_sa_num
     count = sas_per_project - len(_list_sas(iam,project))
     print(f'Creating ' + str(count) + ' service accounts in project ' + project)
     for i in range(count):
-        sa_id = email_prefix + f"{next_sa_num:06}"
+        next_sa_str      = '{num:0{width}}'.format(num=next_sa_num, width=args.sa_zero_pad)
+        sa_id = email_prefix + next_sa_str
+        # sa_id = email_prefix + f"{next_sa_num:06}"
         next_sa_num += 1
         batch.add(iam.projects().serviceAccounts().create(name='projects/' + project, body={ 'accountId': sa_id, 'serviceAccount': { 'displayName': sa_id }}))
     batch.execute()
     sleep(sleep_time)
-    #count = sas_per_project - len(_list_sas(iam,project))
-    #if count > 0:
-    #    _create_accounts(iam,project,sas_per_project)
 
 # List projects
 def _get_projects(service):
@@ -63,9 +61,10 @@ def _create_projects(cloud,count,next_project_num):
     batch = cloud.new_batch_http_request(callback=_pc_resp)
     new_projs = []
     for i in range(count):
-        next_project_str = str(f"{next_project_num:04}")
-        new_proj = project_prefix + next_project_str
-        print(f'The new project is named ' + new_proj + ' using prefix ' + project_prefix + ' and number ' + next_project_str)
+        next_project_str = '{num:0{width}}'.format(num=next_project_num, width=args.proj_zero_pad)
+        # next_project_str = str(f"{next_project_num:04}")
+        new_proj = args.project_prefix + next_project_str
+        print(f'Creating project = '+new_proj+' (prefix = '+args.project_prefix+'; number = '+next_project_str+')')
         next_project_num += 1
         new_projs.append(new_proj)
         batch.add(cloud.projects().create(body={'project_id':new_proj}))
@@ -112,9 +111,9 @@ def _batch_keys_resp(id,resp,exception):
 def _create_sa_keys(iam,projects,path):
     global current_key_dump
     global next_json_key_num
+    next_json_key_num = args.next_json_key_num
     for i in sorted(projects):
         current_key_dump = []
-        #print('Downloading keys from %s' % i)
         if current_key_dump is None or len(current_key_dump) < sas_per_project:
             batch = iam.new_batch_http_request(callback=_batch_keys_resp)
             total_sas = _list_sas(iam,i)
@@ -131,7 +130,8 @@ def _create_sa_keys(iam,projects,path):
             if current_key_dump is not None:
                 for j in range(len(current_key_dump)):
                     k = current_key_dump[j]
-                    json_name = json_key_prefix + str(next_json_key_num)
+                    key_num = '{num:0{width}}'.format(num=next_json_key_num, width=args.json_key_zero_pad)
+                    json_name = ''.join(filter(None, (args.json_key_prefix, str(f"{next_json_key_num:06}"))))
                     with open('%s/%s.json' % (path, json_name),'w+') as f:
                         f.write(k[1])
                     next_json_key_num += 1
@@ -148,7 +148,9 @@ def _delete_sas(iam,project):
     batch.execute()
 
 def serviceaccountfactory(credentials,token,path,list_projects,list_sas,create_projects,max_projects,
-    enable_services,services,create_sas,delete_sas,download_keys,sas_per_project,*args,**kwargs):
+    enable_services,services,create_sas,delete_sas,download_keys,sas_per_project,quick_setup,new_only,
+    next_project_num,next_sa_num,project_prefix,email_prefix,json_key_prefix,sleep_time,
+    rename_keys,*args,**kwargs):
 
     selected_projects = []
     proj_id = loads(open(credentials,'r').read())['installed']['project_id']
@@ -180,10 +182,33 @@ def serviceaccountfactory(credentials,token,path,list_projects,list_sas,create_p
                 except HttpError as e:
                     print(e._get_reason())
                     input('Press Enter to retry.')
+
     if list_projects:
-        return sorted(_get_projects(cloud))
+        resp = sorted(_get_projects(cloud))
+        if resp is not None:
+            print('Projects (%d):' % len(resp))
+            for i in resp:
+                print('  ' + i)
+        else:
+            print('No projects.')
+
     if list_sas:
-        return _list_sas(iam,list_sas)
+        if list_sas == "*":
+            projects = sorted(_get_projects(cloud))
+        else:
+            projects = [list_sas,]
+        if projects is not None:
+            for project in list(projects):
+                resp = _list_sas(iam,project)
+                if resp is not None:
+                    print(str(len(resp))+' service accounts in '+project)
+                    sa_list = []
+                    for i in range(len(resp)):
+                        sa_list.append(resp[i]['email']+' '+'('+ str(resp[i]['uniqueId'])+')')
+                    print(*sorted(sa_list), sep = "\n")
+                else:
+                    print('No service accounts in '+project)
+        
     if create_projects:
         print("create projects: {}".format(create_projects))
         if create_projects > 0:
@@ -197,8 +222,7 @@ def serviceaccountfactory(credentials,token,path,list_projects,list_sas,create_p
                        'You can create %d projects in total, and have %d projects already.\n'
                         % (max_projects, current_count))
         else:
-            print('Will overwrite all service accounts in existing projects.\n'
-                  'So make sure you have some projects already.')
+            print('Using existing projects. Ensure you have some :-)')
             input("Press Enter to continue...")
 
     if enable_services:
@@ -220,8 +244,7 @@ def serviceaccountfactory(credentials,token,path,list_projects,list_sas,create_p
             elif proj == '*':
                 stc =  sorted(_get_projects(cloud))
             for i in sorted(stc):
-                _create_accounts(iam,i,sas_per_project)
-            #_create_accounts(iam, stc, sas_per_project)
+                _create_accounts(iam,i,sas_per_project,email_prefix,sleep_time)
 
     if download_keys:
         try:
@@ -239,7 +262,6 @@ def serviceaccountfactory(credentials,token,path,list_projects,list_sas,create_p
             elif proj == '*':
                 std = _get_projects(cloud)
             _create_sa_keys(iam,std,path)
-            #next_json_key_num = _create_sa_keys(iam,std,path)
 
     if delete_sas:
         for proj in delete_sas:
@@ -260,10 +282,8 @@ if __name__ == '__main__':
         print("\n=== sagen.py requires at least one argument. See options above. ===\n")
         exit()
 
-    # parse = ArgumentParser(description='A tool to create and manage Google service accounts.')
-    # p = configargparse.ArgParser(default_config_files=['/etc/app/conf.d/*.conf', '~/.my_settings'])
     parse = ArgParser(default_config_files=['sagen.conf'],description='A tool to create and manage Google service accounts.')
-    # parse.add('-c', '--config', is_config_file=True, help='path and filename of config file')
+    parse.add('-cf', '--config', is_config_file=True, help='path and filename of config file')
     parse.add('-pa','--path',default='accounts',help='Path to key.json files.\n')
     parse.add('-t','--token',default='token.pickle',help='Specify the pickle token file path.')
     parse.add('-cr','--credentials',default='credentials/credentials.json',help='Specify the credentials file path.')
@@ -276,22 +296,27 @@ if __name__ == '__main__':
     parse.add('-cs','--create-sas',nargs='+',default=None,help='Create service accounts in a project.')
     parse.add('-spp','--sas-per-project',type=int,default=100,help='Number of service accounts created per project.')
     parse.add('-ds','--delete-sas',nargs='+',default=None,help='Delete service accounts in a project.')
-    parse.add('-k','--download-keys',nargs='+',default=None,help='Download keys for all the service accounts in a project.')
+    parse.add('-dk','--download-keys',nargs='+',default=None,help='Download keys for all the service accounts in a project.')
     parse.add('-qs','--quick-setup',default=None,type=int,help='Create projects, enable services, create service accounts and download keys. ')
-    parse.add('-no','--new-only',default=False,action='store_true',help='Do not use existing projects.')
+    parse.add('-no','--new-only',default=False,action='store_true',help='Create SAs in new projects. Do not use existing projects.')
     parse.add('-np','--next-project-num',default=1,type=int,help='Starting number for new projects created.')
     parse.add('-ns','--next-sa-num',default=1,type=int,help='Starting number for batch of service accounts.')
-    parse.add('-nj','--next-json-key-num',default=1,type=int,help='Starting number for json key. Typically same as next-sa-num.')
-    parse.add('-pp','--project-prefix',default="proj",help='Starting number for batch of service accounts.')
-    parse.add('-ep','--email-prefix',default="svcacct",help='prefix of your service account name.')
-    parse.add('-jp','--json-key-prefix',default="",help='Starting number for batch of service accounts.')
-    parse.add('-st','--sleep-time',default="10",type=int,help='Time to sleep - let google backend digest batches')
-    parse.add('-re','--rename-keys-to-email',default=False,action='store_true',help='Rename json keys to svc account email basename')
-    parse.add('-rs','--rename-keys-to-seq',default=False,action='store_true',help='Rename json keys to numeric from svc account email')
-    parse.add('-ru','--rename-keys-to-uniq',default=False,action='store_true',help='Rename json keys to svc account unique ID')
+    parse.add('-nk','--next-json-key-num',default=1,type=int,help='Starting number for json key. Typically same as next-sa-num.')
+    parse.add('-ppre','--project-prefix',default='proj',help='Starting number for batch of service accounts.')
+    parse.add('-epre','--email-prefix',default='svcacct',help='prefix of your service account name.')
+    parse.add('-kpre','--json-key-prefix',default=None,help='Starting number for batch of service accounts.')
+    parse.add('-st','--sleep-time',default=5,type=int,help='Time to sleep - let google backend digest batches')
     parse.add('-rk','--rename-keys',default=None,choices=['email', 'seq', 'uniq'],help='Rename json keys. Choices email, seq or uniq')
+    parse.add('-kpad','--json-key-zero-pad',default="6",help='Number of zeros to pad json key. e.g. 000001')
+    parse.add('-spad','--sa-zero-pad',default="4",help='Number of zeros to pad service account number. e.g. 0001')
+    parse.add('-ppad','--proj-zero-pad',default="4",help='Number of zeros to pad project number. e.g. 0001')
     args = parse.parse_args()
     print(parse.format_values())
+
+    next_sa_num = args.next_sa_num
+    # next_json_key_num = args.next_json_key_num
+    sleep_time = args.sleep_time
+    sas_per_project = args.sas_per_project
 
     if args.rename_keys:
         keypath = args.path + '/'
@@ -305,28 +330,6 @@ if __name__ == '__main__':
         print("Finished renaming json key files")
         exit()
 
-
-    if args.rename_keys_to_email:
-        keypath = args.path + '/'
-        print('Renaming json keys in ' + args.path + ' to the service account email basename')
-        ren2email.ren_email(keypath)
-        print("Finished renaming json key files")
-        exit()
-
-    if args.rename_keys_to_seq:
-        keypath = args.path + '/'
-        print('Renaming json keys in ' + args.path + ' to numeric from svc account email')
-        ren2seq.ren_seq(keypath)
-        print("Finished renaming json key files")
-        exit()
-
-    if args.rename_keys_to_uniq:
-        keypath = args.path + '/'
-        print('Renaming json keys in ' + args.path + ' to svc account unique ID')
-        ren2uniqid.ren_uniq(keypath)
-        print("Finished renaming json key files")
-        exit()
-    
     # If credentials file is invalid, search for one.
     if not os.path.exists(args.credentials):
         options = glob('*.json')
@@ -362,21 +365,5 @@ if __name__ == '__main__':
         args.create_sas = opt
         args.download_keys = opt
 
-    resp = serviceaccountfactory(**vars(args))
-
-    if resp is not None:
-        if args.list_projects:
-            if resp:
-                print('Projects (%d):' % len(resp))
-                for i in resp:
-                    print('  ' + i)
-            else:
-                print('No projects.')
-        elif args.list_sas:
-            if resp:
-                print('Service accounts in %s (%d):' % (args.list_sas,len(resp)))
-                for i in resp:
-                    print('  %s (%s)' % (i['email'],i['uniqueId']))
-            else:
-                print('No service accounts.')
-
+    # serviceaccountfactory()
+    serviceaccountfactory(**vars(args))
