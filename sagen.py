@@ -150,7 +150,7 @@ def _delete_sas(iam,project):
 def serviceaccountfactory(credentials,token,path,list_projects,list_sas,create_projects,max_projects,
     enable_services,services,create_sas,delete_sas,download_keys,sas_per_project,quick_setup,new_only,
     next_project_num,next_sa_num,project_prefix,email_prefix,json_key_prefix,sleep_time,
-    rename_keys,*args,**kwargs):
+    rename_keys,create_group_csv,*args,**kwargs):
 
     selected_projects = []
     proj_id = loads(open(credentials,'r').read())['installed']['project_id']
@@ -198,6 +198,8 @@ def serviceaccountfactory(credentials,token,path,list_projects,list_sas,create_p
         else:
             projects = [list_sas,]
         if projects is not None:
+            global sa_csv
+            sa_csv = []
             for project in list(projects):
                 resp = _list_sas(iam,project)
                 if resp is not None:
@@ -205,6 +207,7 @@ def serviceaccountfactory(credentials,token,path,list_projects,list_sas,create_p
                     sa_list = []
                     for i in range(len(resp)):
                         sa_list.append(resp[i]['email']+' '+'('+ str(resp[i]['uniqueId'])+')')
+                        sa_csv.append(resp[i]['email'])
                     print(*sorted(sa_list), sep = "\n")
                 else:
                     print('No service accounts in '+project)
@@ -310,6 +313,7 @@ if __name__ == '__main__':
     parse.add('-kpad','--json-key-zero-pad',default="6",help='Number of zeros to pad json key. e.g. 000001')
     parse.add('-spad','--sa-zero-pad',default="4",help='Number of zeros to pad service account number. e.g. 0001')
     parse.add('-ppad','--proj-zero-pad',default="4",help='Number of zeros to pad project number. e.g. 0001')
+    parse.add('-csv','--create-group-csv',default=None,help='Create a CSV with SA emails and group name for bulk upload')
     args = parse.parse_args()
     print(parse.format_values())
 
@@ -367,3 +371,12 @@ if __name__ == '__main__':
 
     # serviceaccountfactory()
     serviceaccountfactory(**vars(args))
+
+    if args.create_group_csv:
+        """ADD FUNCTION TO CREATE CSV WITH GROUP NAME, EMAILS, ROLE FOR GROUP ADD"""
+        # pass
+        with open('sa_list.csv', 'w') as f:
+            for item in sa_csv:
+                record = args.create_group_csv+","+item+","+"MEMBER"+"\n"
+                # print(record)
+                f.writelines(record)
