@@ -138,6 +138,7 @@ def _create_sa_keys(iam,projects,path):
             else:
                 print('Redownloading keys from %s' % i)
                 current_key_dump = []
+        sleep(sleep_time)
 
 # Delete Service Accounts
 def _delete_sas(iam,project):
@@ -147,7 +148,7 @@ def _delete_sas(iam,project):
         batch.add(iam.projects().serviceAccounts().delete(name=i['name']))
     batch.execute()
 
-def serviceaccountfactory(credentials,token,path,list_projects,list_sas,create_projects,max_projects,
+def run_sagen(credentials,token,path,list_projects,list_sas,create_projects,max_projects,
     enable_services,services,create_sas,delete_sas,download_keys,sas_per_project,quick_setup,new_only,
     next_project_num,next_sa_num,project_prefix,email_prefix,json_key_prefix,sleep_time,
     rename_keys,create_group_csv,*args,**kwargs):
@@ -193,14 +194,15 @@ def serviceaccountfactory(credentials,token,path,list_projects,list_sas,create_p
             print('No projects.')
 
     if list_sas:
-        if list_sas == "*":
+        if list_sas == ["*"]:
             projects = sorted(_get_projects(cloud))
         else:
-            projects = [list_sas,]
+            projects = list_sas
+            # projects = [list_sas,]
         if projects is not None:
             global sa_csv
             sa_csv = []
-            for project in list(projects):
+            for project in projects:
                 resp = _list_sas(iam,project)
                 if resp is not None:
                     print(str(len(resp))+' service accounts in '+project)
@@ -211,15 +213,20 @@ def serviceaccountfactory(credentials,token,path,list_projects,list_sas,create_p
                     print(*sorted(sa_list), sep = "\n")
                 else:
                     print('No service accounts in '+project)
-        
+        if create_group_csv:
+            with open('sa_list.csv', 'w') as f:
+                for item in sorted(sa_csv):
+                    record = create_group_csv+","+item+","+"MEMBER"+"\n"
+                    f.writelines(record)
+            
     if create_projects:
         print("create projects: {}".format(create_projects))
         if create_projects > 0:
             current_count = len(_get_projects(cloud))
             if current_count + create_projects <= max_projects:
                 print('Creating %d projects' % (create_projects))
-                nprjs = _create_projects(cloud, create_projects, next_project_num)
-                selected_projects = nprjs
+                new_projs = _create_projects(cloud, create_projects, next_project_num)
+                selected_projects = new_projs
             else:
                 sys.exit('Please reduce the value n for --quick-setup.\n'
                        'You can create %d projects in total, and have %d projects already.\n'
@@ -291,11 +298,11 @@ if __name__ == '__main__':
     parse.add('-t','--token',default='token.pickle',help='Specify the pickle token file path.')
     parse.add('-cr','--credentials',default='credentials/credentials.json',help='Specify the credentials file path.')
     parse.add('-lp','--list-projects',default=False,action='store_true',help='List projects viewable by the user.')
-    parse.add('-ls','--list-sas',default=False,help='List service accounts in a project.')
+    parse.add('-ls','--list-sas',nargs='+',default=False,help='List service accounts in a project.')
     parse.add('-cp','--create-projects',type=int,default=None,help='Creates up to N projects.')
     parse.add('-mp','--max-projects',type=int,default=50,help='Max number of project allowed. Default: 50')
     parse.add('-es','--enable-services',default=None,help='Enables services on the project. Default: IAM and Drive')
-    parse.add('-s','--services',nargs='+',default=['iam','drive'],help='Specify a different set of services to enable. Overrides the default.')
+    parse.add('-svcs','--services',nargs='+',default=['iam','drive'],help='Specify a different set of services to enable. Overrides the default.')
     parse.add('-cs','--create-sas',nargs='+',default=None,help='Create service accounts in a project.')
     parse.add('-spp','--sas-per-project',type=int,default=100,help='Number of service accounts created per project.')
     parse.add('-ds','--delete-sas',nargs='+',default=None,help='Delete service accounts in a project.')
@@ -305,9 +312,9 @@ if __name__ == '__main__':
     parse.add('-np','--next-project-num',default=1,type=int,help='Starting number for new projects created.')
     parse.add('-ns','--next-sa-num',default=1,type=int,help='Starting number for batch of service accounts.')
     parse.add('-nk','--next-json-key-num',default=1,type=int,help='Starting number for json key. Typically same as next-sa-num.')
-    parse.add('-ppre','--project-prefix',default='proj',help='Starting number for batch of service accounts.')
-    parse.add('-epre','--email-prefix',default='svcacct',help='prefix of your service account name.')
-    parse.add('-kpre','--json-key-prefix',default=None,help='Starting number for batch of service accounts.')
+    parse.add('-ppre','--project-prefix',default='proj',type=str,help='Starting number for batch of service accounts.')
+    parse.add('-epre','--email-prefix',default='svcacct',type=str,help='prefix of your service account name.')
+    parse.add('-kpre','--json-key-prefix',default=None,type=str,help='Starting number for batch of service accounts.')
     parse.add('-st','--sleep-time',default=5,type=int,help='Time to sleep - let google backend digest batches')
     parse.add('-rk','--rename-keys',default=None,choices=['email', 'seq', 'uniq'],help='Rename json keys. Choices email, seq or uniq')
     parse.add('-kpad','--json-key-zero-pad',default="6",help='Number of zeros to pad json key. e.g. 000001')
@@ -316,6 +323,9 @@ if __name__ == '__main__':
     parse.add('-csv','--create-group-csv',default=None,help='Create a CSV with SA emails and group name for bulk upload')
     args = parse.parse_args()
     print(parse.format_values())
+    # print(vars(args))
+    ## Below is a method to assign variables from args.variables in argparse
+    # locals().update(vars(args))
 
     next_sa_num = args.next_sa_num
     # next_json_key_num = args.next_json_key_num
@@ -369,14 +379,5 @@ if __name__ == '__main__':
         args.create_sas = opt
         args.download_keys = opt
 
-    # serviceaccountfactory()
-    serviceaccountfactory(**vars(args))
+    run_sagen(**vars(args))
 
-    if args.create_group_csv:
-        """ADD FUNCTION TO CREATE CSV WITH GROUP NAME, EMAILS, ROLE FOR GROUP ADD"""
-        # pass
-        with open('sa_list.csv', 'w') as f:
-            for item in sa_csv:
-                record = args.create_group_csv+","+item+","+"MEMBER"+"\n"
-                # print(record)
-                f.writelines(record)
