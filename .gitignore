@@ -1,0 +1,4 @@
+svcaccts/*.json
+lib/__pycache__/
+creds/*
+sagen.conf
