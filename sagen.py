@@ -180,7 +180,7 @@ def run_sagen(credentials, token, path, list_projects, list_sas, create_projects
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(credentials, SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(credentials, scopes=SCOPES)
             creds = flow.run_console()
         with open(token, "wb") as t:
             pickle.dump(creds, t)
@@ -209,7 +209,7 @@ def run_sagen(credentials, token, path, list_projects, list_sas, create_projects
             for i in resp:
                 print("  " + i)
         else:
-            print("No projects.")
+            print("No projects founds.")
 
     if list_sas:
         if list_sas == ["*"]:
@@ -359,7 +359,7 @@ if __name__ == "__main__":
     parse.add("-rk", "--rename-keys", default=None, choices=["email", "seq", "uniq"], help="Rename json keys")
     parse.add("-kpad", "--json-key-zero-pad", dest="kpad", default="6", help="Zero pad json key. e.g. 000001")
     parse.add("-spad", "--sa-zero-pad", dest="spad", default="6", help="Zeros pad service account #. e.g. 0001")
-    parse.add("-ppad", "--proj-zero-pad", dest="ppad", default="4", help="Zero pad project number. e.g. 0001")
+    parse.add("-ppad", "--proj-zero-pad", dest="ppad", default="6", help="Zero pad project number. e.g. 0001")
     parse.add("-csv", "--create-group-csv", dest="csv", default=None, help="Create CSV to bulk upload SA emails")
     parse.add("-agm", "--add-to-group", default=None, help="Add SA email from json keys to group")
     parse.add("-dgm", "--delete-from-group", default=None, help="Delete all members from named group")
