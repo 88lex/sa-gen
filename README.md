@@ -1,7 +1,7 @@
 **sagen**
 Ref: https://github.com/88lex/sa-guide For more info
 
-Major Thanks! to nemchik/ixnyne for a major cleanup/improvement to this code. Much appreciated :-)
+Many Thanks! to nemchik/ixnyne for a major cleanup/improvement to this code. Much appreciated :-)
 
 This script is not enormously difficult, but does require reading carefully and installing/setting up gcloud sdk.
 
