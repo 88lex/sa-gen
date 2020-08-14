@@ -68,8 +68,7 @@ NOTE: If using a domain that you share with others, then use a name other than `
 
 **export FIRST_PROJECT_NUM=1**
 **export LAST_PROJECT_NUM=2**
-These are the starting and ending numbers that are appended to the project name. As noted above, a base name of 'sasync` and first number of `1` will
-create projects `sasync1`, `sasync2` until the LAST_PROJECT_NUM .
+These are the starting and ending numbers that are appended to the project name. As noted above, a base name of `sasync` and first number of `1` will create projects `sasync1`, `sasync2` until the LAST_PROJECT_NUM .
 
 Use as many projects as you like, within allowable limits. Paid gsuite accounts can create a max of 50 accounts, but can apply for more.
 Free accounts can create up to 12 projects.
