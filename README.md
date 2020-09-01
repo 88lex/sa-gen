@@ -1,12 +1,10 @@
-###**sagen**
+### **sagen**
 
 NOTE: `sagen` now has a sister application called [safire]( https://github.com/88lex/safire ), a python app with a number of
 additional features and better speed. `safire` can be installed via git clone, pip install safire or from Colab. 
 `sagen` still runs perfectly well for small/medium service account needs, and is based on gcloud sdk rather than python.
 
 Please see: https://github.com/88lex/sa-guide For more info on sagen, safire and setting up service accounts.
-
-Many Thanks! to nemchik/ixnyne for a major cleanup/improvement to this code. Much appreciated :-)
 
 This script is not enormously difficult, but does require reading carefully and installing/setting up gcloud sdk.
 
