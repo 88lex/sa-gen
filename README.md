@@ -1,5 +1,10 @@
-**sagen**
-Ref: https://github.com/88lex/sa-guide For more info
+###**sagen**
+
+NOTE: `sagen` now has a sister application called [safire]( https://github.com/88lex/safire ), a python app with a number of
+additional features and better speed. `safire` can be installed via git clone, pip install safire or from Colab. 
+`sagen` still runs perfectly well for small/medium service account needs, and is based on gcloud sdk rather than python.
+
+Please see: https://github.com/88lex/sa-guide For more info on sagen, safire and setting up service accounts.
 
 Many Thanks! to nemchik/ixnyne for a major cleanup/improvement to this code. Much appreciated :-)
 
@@ -98,12 +103,7 @@ The json files will be in the directory you specified, along with a file called 
 
 **Once you have set the above variables go the command line and run `./sa-gen` . The script will create the projects and service accounts for you.**
 
-
-
-
 **Please see https://github.com/88lex/sa-guide for further information. Note that sa-guide may not be completely updated, but should provide some help.**
-
-
 
 *****************
 *****************
@@ -112,82 +112,3 @@ The json files will be in the directory you specified, along with a file called 
 Forked from DashLt at https://gist.github.com/DashLt/4c6ff6e9bde4e9bc4a9ed7066c4efba4 and
 Forked from mc2squared at https://gist.github.com/mc2squared/01c933a8172a26af88285610a0e5af8d
 Borrowed some great ideas from JD at https://gist.github.com/zen-jd/cc6c609b9389443bd7eeac3be8c74710
-
-
-
-
-*************************
-*************************
-
-**THE TEXT BELOW CONTAINS THE README.MD FOR THE OLD/PRIOR VERSION sa-gen-original THAT IS STILL AVAILABLE IN THE REPO**
-
-*************************
-*************************
-
-Create up to 100 service accounts for a google project using gcloud SDK
-
-_forked from DashLt at https://gist.github.com/DashLt/4c6ff6e9bde4e9bc4a9ed7066c4efba4_ and
-
-_forked from mc2squared at https://gist.github.com/mc2squared/01c933a8172a26af88285610a0e5af8d_
-
-
-requires gcloud command line tools
-
-install with ```curl https://sdk.cloud.google.com | bash```
-or go to ```https://cloud.google.com/sdk/docs/quickstarts``` to read more and install in non-linux OSes.
-
-max 100 service accounts per project
-
-max 12 projects for a normal gmail account.
-max 50 projects for a paid gsuite account. You can request more project from Google if necessary.
-
-run `gcloud init --console-only` first and select a project for your first batch of 100.
-For subsequent batches of 100 you run `gcloud init` again, pick 1, [1] Re-initialize this configuration
-then choose the account where your projects/SAs reside. Then choose the next project.
-
-Before running the script:
-Create a folder for your keys
-
-Set your key directory, default is `KEYS_DIR=/opt/sa`. There is no need to change your KEYS_DIR as you
-run more batches and projects, as long as you increment the key numbers appropriately to not overwrite existing keys.
-
-If you want to create more than 100 jsons then increment COUNT for each batch.
-For the first batch set `COUNT=1` and `sagen{1..100}` in the script.
-( Note that `sagen` is simply a text prefix for the name that the SA email will be given. You may choose whatever prefix you like.)
-
-For more batches edit and change `COUNT=101` and `sagen{101..200}` in the script. Third batch `COUNT=201` `sagen{201..300}` and so on...
-
-FURTHER NOTES TO THE ABOVE:
-
-In the first pass use the following:
-
-```
-KEYS_DIR=/opt/sa
-#
-# If you want to create more than 100 jsons then increment COUNT for each batch.
-# For the first batch COUNT=1. Second batch COUNT=101. Third batch COUNT=201 ...
-COUNT=1
-for name in sagen{1..101}; do
-```
-
-Then in the second pass do the following
-
-```
-KEYS_DIR=/opt/sa
-#
-# If you want to create more than 100 jsons then increment COUNT for each batch.
-# For the first batch COUNT=1. Second batch COUNT=101. Third batch COUNT=201 ...
-COUNT=101
-for name in sagen{101..201}; do
-```
-
-Then for the third pass do the following:
-
-```
-KEYS_DIR=/opt/sa
-#
-# If you want to create more than 100 jsons then increment COUNT for each batch.
-# For the first batch COUNT=1. Second batch COUNT=101. Third batch COUNT=201 ...
-COUNT=201
-for name in sagen{201..301}; do
-```
