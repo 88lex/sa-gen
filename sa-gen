@@ -11,7 +11,7 @@ LAST_PROJECT_NUM=3
 SA_EMAIL_BASE_NAME="insertuniquename"       # any unique prefix or the prefix you generated for saltbox
 FIRST_SA_NUM=1
 NUM_SAS_PER_PROJECT=100
-CYCLE_DELAY=0.1s                  # If issues with Google back end not recognizing SAs increase this number. Set = 0 for no delay
+CYCLE_DELAY=0.1s               # If issues with Google back end not recognizing SAs increase this number. Set = 0 for no delay
 SECTION_DELAY=5s               # If issues with Google back end not recognizing SAs increase this number. Set = 0 for no delay
 
 
