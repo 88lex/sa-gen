@@ -2,13 +2,13 @@
 # Running this script requires gcloud command line tools. To install go to https://cloud.google.com/sdk/docs/quickstarts
 # See readme.md to understand the variables used in this script
 
-KEYS_DIR=/opt/sa
-ORGANIZATION_ID="insertyourorganizationID"
-GROUP_NAME="mygroup@mydomain.com"
-PROJECT_BASE_NAME="myprojectbasename"
+KEYS_DIR=/opt/sa/all                        # path where you want to store sa JSON files [you will need to add the /all here, most likely]
+ORGANIZATION_ID="insertyourorganizationID"  # organization ID from gcloud SDK step
+GROUP_NAME="mygroup@mydomain.com"           # the group [full address as shown] you created previously
+PROJECT_BASE_NAME="myprojectbasename"       # any unique prefix or the prefix you generated for saltbox
 FIRST_PROJECT_NUM=1
 LAST_PROJECT_NUM=3
-SA_EMAIL_BASE_NAME="insertuniquename"
+SA_EMAIL_BASE_NAME="insertuniquename"       # any unique prefix or the prefix you generated for saltbox
 FIRST_SA_NUM=1
 NUM_SAS_PER_PROJECT=100
 CYCLE_DELAY=0.1s                  # If issues with Google back end not recognizing SAs increase this number. Set = 0 for no delay
@@ -75,7 +75,7 @@ create_keys() {
         echo "$GROUP_NAME,$saname@$PROJECT.iam.gserviceaccount.com,USER,MEMBER" | tee -a $KEYS_DIR/members.csv $KEYS_DIR/allmembers.csv
         sleep $CYCLE_DELAY
     done
-    MEMBER_COUNT=`cat /opt/sa/members.csv | grep "gservice" | wc -l`
+    MEMBER_COUNT=`cat $KEYS_DIR/members.csv | grep "gservice" | wc -l`
     echo -e "\nNumber of service accounts in members.csv = $MEMBER_COUNT"
     TOTAL_JSONS_NOW=`ls $KEYS_DIR | grep ".json" | wc -l`
     let TOTAL_JSONS_MADE=$TOTAL_JSONS_NOW-$TOTAL_JSONS_BEF

@@ -39,7 +39,7 @@ There are a number of variables that you need to specify to run sa-gen for your 
 that are names the way you want to name them. These variables are described below. The names and numeric ranges are quite flexible -
 name them as you like.
 
-**export KEYS_DIR=/opt/sa**
+**export KEYS_DIR=/opt/sa/all**
 This is the location where you want to store your service account json keys. Please create it before running this script
 Note that you can create a maximum of 100 service accounts per project, but you can store all of your json keys in this
 directory as long as the json file names do not overlap.
