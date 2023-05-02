@@ -1,8 +1,34 @@
 ### **sagen**
 
-NOTE: `sagen` now has a sister application called [safire]( https://github.com/88lex/safire ), a python app with a number of
-additional features and better speed. `safire` can be installed via git clone, pip install safire or from Colab. 
-`sagen` still runs perfectly well for small/medium service account needs, and is based on gcloud sdk rather than python.
+May 2023 NOTE: `sa-gen` has been updated to 
+  - Create a Google Group if it does not already exist (set in sa-gen.conf)
+  - Automatically add service account emails to the specified Google Group
+  - Install gcloud sdk (if you need) with the `install_gcloud` script
+  - Use sa-gen.conf to specify variables (You must rename or copy sa-gen-default.conf to sa-gen.conf, then edit it)
+  - Generate a random alphanumeric SUFFIX for your projects (Google needs a unique project name)
+  - SUFFIX may also be set manually in `sa-gen.conf` if you like
+  - Prior versions of sa-gen still run, and have been put in the /old directory
+
+  - A separate, simple script called `make-tds` (from sasync/utils) is added here as well
+    - `make-tds` will create as many new Shared Drives/Team Drives as you like
+    - It uses Mawaya's fclone which you can install with `install_fclone`
+    - If you specify one existing Shared Drive on the same account then all new Shared Drives/TDs will be created with the same Members and permissions as the existing Shared Drive
+
+THINGS TO CONSIDER:
+  - Google accounts generally allow 12, 25 or 50 projects depending on the type of account
+  - You may request additional projects. But Google has been a little more selective about granting additional projects recently
+  - Each project may have up to 100 service accounts. If you try to create more than 100 you will see an error
+  - For each service account you can create and download up to 10 keys. If you try to create more than 10 keys then you will see an error
+  - Projects can be deleted. But they stay in a kind of deleted-project-bin for ~30 days. After the 30 day period your unused project quota will increase again
+  - Generally, project names are irrelevant. They can be used by most applications/ecosystems regardless of name
+  - Service accounts and/or their keys can be deleted. Unlike with projects, deleted service accounts and/or keys can be recreated immediately
+  - The naming of service accounts and their respective email addresses are, as with projects, generally irrelevant. As long as they are added to a Google Group then you can use them with Shared Drives/Team Drives.
+  
+=======================
+The documentation below is mostly unchanged, but there may be small differences from the prior version (e.g. slight variable names changes). When I have spare time I will update the docs. If anything glaring, please ping me.
+
+
+NOTE: `sagen` has a sister application called [safire]( https://github.com/88lex/safire ), a python app with a number of additional features and better speed. `safire` can be installed via git clone, pip install safire or from Colab. [[ It has been a while since `safire` was updated, whereas sa-gen still works nicely, but more slowly. ]]
 
 Please see: https://github.com/88lex/sa-guide For more info on sagen, safire and setting up service accounts.
 

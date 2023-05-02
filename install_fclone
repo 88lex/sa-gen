@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Download the fclone zip file
+wget https://github.com/mawaya/rclone/releases/download/fclone-v0.4.1/fclone-v0.4.1-linux-amd64.zip
+
+# Unzip the fclone zip file
+unzip fclone-v0.4.1-linux-amd64.zip
+
+# Move the fclone binary to /usr/local/bin
+sudo mv fclone-v0.4.1-linux-amd64/fclone /usr/local/bin
+
+# Make the fclone binary executable
+sudo chmod +x /usr/local/bin/fclone
+
+# Add the fclone binary to your PATH
+export PATH=$PATH:/usr/local/bin
+
+# Test that fclone is installed correctly
+fclone -V
