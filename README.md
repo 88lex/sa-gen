@@ -9,10 +9,26 @@ May 2023 NOTE: `sa-gen` has been updated to
   - SUFFIX may also be set manually in `sa-gen.conf` if you like
   - Prior versions of sa-gen still run, and have been put in the /old directory
 
-  - A separate, simple script called `make-tds` (from sasync/utils) is added here as well
+  ADDED new scripts
+  - `make-tds` (from sasync/utils) Preequisite: fclone
     - `make-tds` will create as many new Shared Drives/Team Drives as you like
     - It uses Mawaya's fclone which you can install with `install_fclone`
     - If you specify one existing Shared Drive on the same account then all new Shared Drives/TDs will be created with the same Members and permissions as the existing Shared Drive
+
+  - `sa-add2group` Prerequisite: gcloud sdk
+    - This script will extract service account emails from json keys in a local folder,
+      then add the SA emails to a Google group. If the group does not exist it will create the group
+
+  - `sa-count` Prerequisite: gcloud sdk
+    - This scipt will get a list of all projects in an account and print the 
+      project name along with the number of service accounts per project
+
+  - `sa-delete` Prerequisite: gcloud sdk
+    - This script will delete all service accounts in a specified project
+
+  - `sa-emails` Prerequisite: jq
+    - This script will list all service account emails for json keys in a given directory
+
 
 THINGS TO CONSIDER:
   - Google accounts generally allow 12, 25 or 50 projects depending on the type of account

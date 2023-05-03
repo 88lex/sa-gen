@@ -1,0 +1,19 @@
+#!/bin/bash
+# This scipt will get a list of all projects in an account and print the 
+# project name along with the number of service accounts per project
+
+PROJECTS=$(gcloud projects list --format="value(projectId)")
+
+# For each project, get the list of service accounts.
+for PROJECT in ${PROJECTS}; do
+
+  # Get the list of service accounts in the project.
+  SERVICE_ACCOUNTS=$(gcloud iam service-accounts list --project=${PROJECT})
+
+  # Count the number of service accounts.
+  SERVICE_ACCOUNT_COUNT=$(grep -c "account" <<< ${SERVICE_ACCOUNTS})
+
+  # Print the project name and the number of service accounts.
+  echo "${PROJECT}: ${SERVICE_ACCOUNT_COUNT}"
+
+done

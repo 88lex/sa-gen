@@ -1,0 +1,30 @@
+#!/bin/bash
+# This script will delete all service accounts in a project
+
+# List all projects and store them in an array
+PROJECTS=($(gcloud projects list --format="value(projectId)"))
+# Print the array with indices
+echo "Available projects:"
+for i in "${!PROJECTS[@]}"
+do
+  echo "$i) ${PROJECTS[$i]}"
+done
+# Prompt the user to enter an index
+read -p "Enter the index of the project you want to delete all service accounts for: " INDEX
+# Validate the input
+if [[ $INDEX =~ ^[0-9]+$ ]] && [ $INDEX -ge 0 ] && [ $INDEX -lt ${#PROJECTS[@]} ]
+then
+  # Get the project ID from the array
+  PROJECT_ID=${PROJECTS[$INDEX]}
+  # List all service accounts for the project and store them in an array
+  SERVICE_ACCOUNTS=($(gcloud iam service-accounts list --project $PROJECT_ID --format="value(email)"))
+  # Loop over the array and delete each service account
+  for SA in "${SERVICE_ACCOUNTS[@]}"
+  do
+    echo "Deleting service account $SA"
+    gcloud iam service-accounts delete $SA --quiet
+  done
+else
+  # Invalid input
+  echo "Invalid index. Please try again."
+fi

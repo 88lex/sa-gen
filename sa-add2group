@@ -1,0 +1,52 @@
+#!/bin/bash
+# This script will extract service account emails from json keys in a local folder,
+# then add the SA emails to a Google group. If the group does not exist it will create the group
+# Prerequisite:  gcloud sdk
+
+# Get the service account keys location from command line argument or prompt user for input
+if [ -z "$1" ]; then
+  read -p "Enter the location of the service account keys: " service_account_keys_location
+else
+  service_account_keys_location="$1"
+fi
+
+# Get the google group email name from command line argument or prompt user for input
+if [ -z "$2" ]; then
+  read -p "Enter the google group email to add the service account emails to: " google_group_email_name
+else
+  google_group_email_name="$2"
+fi
+
+# Get the list of service account json keys
+service_account_keys=$(find "$service_account_keys_location" -type f -name "*.json" | sort | uniq )
+
+# Extract the email addresses from the service account json keys
+email_addresses=()
+for service_account_key in $service_account_keys; do
+  email_address=$(jq -r '.client_email' "$service_account_key")
+  email_addresses+=("$email_address")
+done
+
+printf "There are %s unique service account emails.\n" "${#email_addresses[@]}"
+
+# Enable necessary Google APIs in gcloud sdk
+gcloud services enable admin.googleapis.com cloudresourcemanager.googleapis.com cloudidentity.googleapis.com
+
+# Check if the google group exists
+if gcloud identity groups describe "$google_group_email_name" &> /dev/null; then
+  printf "The google group %s already exists.\n" "$google_group_email_name"
+else
+  printf "The google group %s does not exist. Creating it.\n" "$google_group_email_name"
+  organization_id=$(gcloud organizations list --format="value(ID)")
+  if gcloud identity groups create "$google_group_email_name" --description="$google_group_email_name" --organization="$organization_id"; then
+    printf "The google group %s was created successfully.\n" "$google_group_email_name"
+  else
+    printf "Failed to create the google group %s.\n" "$google_group_email_name"
+  fi
+fi
+
+# Add service account emails to google group
+printf "Adding %s emails to %s\n" "${#email_addresses[@]}" "$google_group_email_name"
+for email in "${email_addresses[@]}"; do
+  gcloud identity groups memberships add --group-email="$google_group_email_name" --member-email="$email"
+done

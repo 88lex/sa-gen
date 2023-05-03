@@ -1,0 +1,21 @@
+#!/bin/bash
+# This script will list all service account emails for json keys in a given directory
+
+# Get the path to the directory containing the JSON key files.
+if [ -z "$1" ]; then
+  read -p "Enter the path to the directory containing the JSON key files: " key_file_dir
+else
+  key_file_dir=$1
+fi
+
+# Check if the directory exists.
+if [ ! -d "$key_file_dir" ]; then
+  echo "The directory '$key_file_dir' does not exist."
+  exit 1
+fi
+
+# Iterate over all the JSON key files in the directory.
+for key_file in "$key_file_dir"/*.json; do
+  service_account_emails=$(jq -r '.client_email' "$key_file")
+  echo "$service_account_emails"
+done
