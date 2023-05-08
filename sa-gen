@@ -1,5 +1,13 @@
 #!/bin/bash -v
 
+function check_config() {
+  if [ ! -f sa-gen.conf ]; then
+    cp sa-gen-default.conf sa-gen.conf
+    echo -e "\nCreated sa-gen.conf with default settings.\nEdit using nano or vim to specify a group name and email.\n"
+    exit
+  fi
+}
+
 # Display gcloud sdk organization and active admin project and enable admin APIs
 function check_prereqs() {
   gcloud organizations list
@@ -42,6 +50,7 @@ function create_service_accounts() {
 }
 
 function main() {
+  check_config
   check_prereqs
   source sa-gen.conf
   create_projects

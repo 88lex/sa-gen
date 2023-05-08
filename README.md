@@ -3,8 +3,9 @@
 May 2023 NOTE: `sa-gen` has been updated to 
   - Create a Google Group if it does not already exist (set in sa-gen.conf)
   - Automatically add service account emails to the specified Google Group
-  - Install gcloud sdk (if you need) with the `install_gcloud` script
-  - Use sa-gen.conf to specify variables (You must rename or copy sa-gen-default.conf to sa-gen.conf, then edit it)
+  - Install gcloud sdk with the `install_gcloud` script
+  - Edit sa-gen.conf to specify group name, group email, etc.
+  - If no sa-gen.conf exists then running sa-gen Creates a default sa-gen.conf, then stops. Edit with nano/vim
   - Generate a random alphanumeric SUFFIX for your projects (Google needs a unique project name)
   - SUFFIX may also be set manually in `sa-gen.conf` if you like
   - Prior versions of sa-gen still run, and have been put in the /old directory
